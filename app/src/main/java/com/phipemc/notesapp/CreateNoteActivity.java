@@ -12,6 +12,7 @@ public class CreateNoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_note);
+        getSupportActionBar().hide();
 
         ImageView imageBack = findViewById(R.id.image_back);
         imageBack.setOnClickListener(new View.OnClickListener() {
