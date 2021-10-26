@@ -1,10 +1,12 @@
-package com.phipemc.notesapp;
+package com.phipemc.notesapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.phipemc.notesapp.R;
 
 public class CreateNoteActivity extends AppCompatActivity {
 
