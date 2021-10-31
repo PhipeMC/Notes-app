@@ -34,6 +34,17 @@ public class Note implements Serializable {
     @ColumnInfo(name = "web_link")
     private String web_link;
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    @ColumnInfo(name = "color")
+    private String color;
+
     public int getId() {
         return id;
     }
