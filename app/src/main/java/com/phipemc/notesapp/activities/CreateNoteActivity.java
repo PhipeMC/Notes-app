@@ -2,6 +2,7 @@ package com.phipemc.notesapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -14,13 +15,18 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Layout;
+import android.util.Patterns;
 import android.view.ContentInfo;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,13 +47,18 @@ public class CreateNoteActivity extends AppCompatActivity {
 
     private EditText tituloNota, subtituloNota, cuerpoNota;
     private TextView textFecha;
-    private String selectedColor;
     private View viewSubIndica;
     private ImageView imageNote;
+    private TextView textWebURL;
+    private LinearLayout layoutWebURL;
+
+    private String selectedColor;
     private String selectedImagePath;
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
+
+    private AlertDialog dialogAddURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +80,8 @@ public class CreateNoteActivity extends AppCompatActivity {
         textFecha = findViewById(R.id.textDateTime);
         viewSubIndica =  findViewById(R.id.viewSubtitleIndicator);
         imageNote = findViewById(R.id.imageNote);
+        textWebURL = findViewById(R.id.textWebURL);
+        layoutWebURL = findViewById(R.id.layoutWebURL);
         //Darle formato a una fecha
         textFecha.setText(
                 new SimpleDateFormat("EEEE, dd  MMMM yyyy HH:mm a", Locale.getDefault()).format(new Date())
@@ -105,6 +118,10 @@ public class CreateNoteActivity extends AppCompatActivity {
         miNota.setDate(textFecha.getText().toString());
         miNota.setColor(selectedColor);
         miNota.setImgpath(selectedImagePath);
+
+        if(layoutWebURL.getVisibility() == View.VISIBLE){
+            miNota.setWeb_link(textWebURL.getText().toString());
+        }
 
         @SuppressLint("StaticFieldLeak")
         class guardarNota extends AsyncTask<Void, Void, Void>{
@@ -211,9 +228,7 @@ public class CreateNoteActivity extends AppCompatActivity {
             }
         });
 
-        layoutExtra.findViewById(R.id.layoutAddImage).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        layoutExtra.findViewById(R.id.layoutAddImage).setOnClickListener((v) -> {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 if(ContextCompat.checkSelfPermission(
                         getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE
@@ -222,9 +237,16 @@ public class CreateNoteActivity extends AppCompatActivity {
                             CreateNoteActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
                             REQUEST_CODE_STORAGE_PERMISSION
                     );
-                }else{
+                }else {
                     selectImage();
                 }
+        });
+
+        layoutExtra.findViewById(R.id.layoutAddUrl).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                showAddURLDialog();
             }
         });
     }
@@ -288,4 +310,46 @@ public class CreateNoteActivity extends AppCompatActivity {
         }
         return filePath;
     }
+
+    private void showAddURLDialog(){
+        if(dialogAddURL == null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(CreateNoteActivity.this);
+            View view = LayoutInflater.from(this).inflate(
+                    R.layout.layout_url, (ViewGroup) findViewById(R.id.layoutAddUrlContainer)
+            );
+            builder.setView(view);
+
+            dialogAddURL = builder.create();
+            if(dialogAddURL.getWindow() !=null){
+                dialogAddURL.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            }
+
+            final EditText inputURL = view.findViewById(R.id.inputURL);
+            inputURL.requestFocus();
+
+            view.findViewById(R.id.textAdd).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(inputURL.getText().toString().trim().isEmpty()){
+                        Toast.makeText(CreateNoteActivity.this, "Introduce la URL", Toast.LENGTH_SHORT).show();
+                    }else if(!Patterns.WEB_URL.matcher(inputURL.getText().toString()).matches()){
+                        Toast.makeText(CreateNoteActivity.this, "Introduce una URL valida", Toast.LENGTH_SHORT).show();
+                    }else{
+                        textWebURL.setText(inputURL.getText().toString());
+                        layoutWebURL.setVisibility(View.VISIBLE);
+                        dialogAddURL.dismiss();
+                    }
+                }
+            });
+
+            view.findViewById(R.id.textCancelar).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialogAddURL.dismiss();
+                }
+            });
+        }
+        dialogAddURL.show();
+    }
+
 }

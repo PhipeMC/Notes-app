@@ -8,4 +8,9 @@
     <string name="vario">Vario</string>
     <string name="extra">Extra</string>
     <string name="add_image">Add Image</string>
+    <string name="add_uri">Add Uri</string>
+    <string name="enter_URL">Introduce una URL</string>
+    <string name="add">Añada Texto</string>
+    <string name="a_adir">añadir</string>
+    <string name="cancelar">Cancelar</string>
 </resources>

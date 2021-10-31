@@ -3,10 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/ITSUR/7mo/Movil/Notes-app/app/src/main/res/drawable/background_dialog.xml" value="0.10462962962962963" />
         <entry key="..\:/ITSUR/7mo/Movil/Notes-app/app/src/main/res/layout/activity_create_note.xml" value="0.2" />
         <entry key="..\:/ITSUR/7mo/Movil/Notes-app/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
         <entry key="..\:/ITSUR/7mo/Movil/Notes-app/app/src/main/res/layout/all_notes_layout.xml" value="0.25416666666666665" />
         <entry key="..\:/ITSUR/7mo/Movil/Notes-app/app/src/main/res/layout/layout_extra.xml" value="0.25416666666666665" />
+        <entry key="..\:/ITSUR/7mo/Movil/Notes-app/app/src/main/res/layout/layout_url.xml" value="0.176" />
         <entry key="..\:/Users/PhipeMC/AndroidStudioProjects/notesapp/app/src/main/res/drawable/background_add_button.xml" value="0.19305555555555556" />
         <entry key="..\:/Users/PhipeMC/AndroidStudioProjects/notesapp/app/src/main/res/drawable/background_done_button.xml" value="0.19305555555555556" />
         <entry key="..\:/Users/PhipeMC/AndroidStudioProjects/notesapp/app/src/main/res/drawable/background_search.xml" value="0.19305555555555556" />
