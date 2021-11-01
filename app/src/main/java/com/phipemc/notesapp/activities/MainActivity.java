@@ -17,17 +17,22 @@ import com.phipemc.notesapp.R;
 import com.phipemc.notesapp.adapters.AdaptadorNotes;
 import com.phipemc.notesapp.database.databaseNotes;
 import com.phipemc.notesapp.entities.Note;
+import com.phipemc.notesapp.listeners.NotesListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NotesListener {
 
     public static final int REQUEST_CODE_ADD_NOTE = 1;
+    public static final int REQUEST_CODE_UPDATE_NOTE = 2;
+    public static final int REQUEST_CODE_SHOW_NOTES = 3;
 
     private RecyclerView notesRecyclerView;
     private List<Note> listaNotas;
     private AdaptadorNotes adaptadorNotes;
+
+    private int noteClickedPosition = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +54,22 @@ public class MainActivity extends AppCompatActivity {
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         );
         listaNotas =  new ArrayList<>();
-        adaptadorNotes = new AdaptadorNotes(listaNotas);
+        adaptadorNotes = new AdaptadorNotes(listaNotas, this);
         notesRecyclerView.setAdapter(adaptadorNotes);
 
-        mostarNotas();
+        mostarNotas(REQUEST_CODE_SHOW_NOTES);
     }
 
-    private void mostarNotas(){
+    @Override
+    public void onNoteClicked(Note note, int position) {
+        noteClickedPosition = position;
+        Intent intent = new Intent(getApplicationContext(), CreateNoteActivity.class);
+        intent.putExtra("isViewOrUpdate", true);
+        intent.putExtra("note", note);
+        startActivityForResult(intent, REQUEST_CODE_UPDATE_NOTE);
+    }
+
+    private void mostarNotas(final int requestCode){
 
         @SuppressLint("StaticFieldLeak")
         class obtenerNotas extends AsyncTask<Void, Void, List<Note>>{
@@ -67,16 +81,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(List<Note> notas){
                 super.onPostExecute(notas);
-                if(listaNotas.size() == 0){
+                if(requestCode == REQUEST_CODE_SHOW_NOTES){
                     listaNotas.addAll(notas);
                     adaptadorNotes.notifyDataSetChanged();
-                }
-                else{
-                    listaNotas.add(0, notas.get(0));
+                }else if(requestCode == REQUEST_CODE_ADD_NOTE){
+                    listaNotas.add(0,notas.get(0));
                     adaptadorNotes.notifyItemInserted(0);
-
+                    notesRecyclerView.smoothScrollToPosition(0);
+                }else if(requestCode == REQUEST_CODE_UPDATE_NOTE){
+                    listaNotas.remove(noteClickedPosition);
+                    listaNotas.add(noteClickedPosition, notas.get(noteClickedPosition));
+                    adaptadorNotes.notifyItemChanged(noteClickedPosition);
                 }
-                notesRecyclerView.smoothScrollToPosition(0);
             }
 
         }
@@ -87,7 +103,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_CODE_ADD_NOTE && resultCode == RESULT_OK){
-            mostarNotas();
+            mostarNotas(REQUEST_CODE_ADD_NOTE);
+        }else if(requestCode == REQUEST_CODE_UPDATE_NOTE && resultCode == RESULT_OK){
+            if(data != null){
+                mostarNotas(REQUEST_CODE_UPDATE_NOTE);
+            }
         }
     }
 }

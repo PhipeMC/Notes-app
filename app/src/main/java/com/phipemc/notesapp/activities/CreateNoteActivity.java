@@ -60,6 +60,8 @@ public class CreateNoteActivity extends AppCompatActivity {
 
     private AlertDialog dialogAddURL;
 
+    private Note alReadyAvailableNote;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,8 +100,32 @@ public class CreateNoteActivity extends AppCompatActivity {
 
         selectedColor = "#333333";
         selectedImagePath = "";
+
+        if(getIntent().getBooleanExtra("isViewOrUpdate", false)){
+            alReadyAvailableNote = (Note) getIntent().getSerializableExtra("note");
+            setViewOrUpdate();
+        }
+
         initExtra();
         setViewSubIndicaColor();
+    }
+
+    private void setViewOrUpdate(){
+        tituloNota.setText(alReadyAvailableNote.getTitle());
+        subtituloNota.setText(alReadyAvailableNote.getSubtitle());
+        cuerpoNota.setText(alReadyAvailableNote.getNote_text());
+        textFecha.setText(alReadyAvailableNote.getDate());
+
+        if(alReadyAvailableNote.getImgpath() != null && !alReadyAvailableNote.getImgpath().trim().isEmpty()){
+            imageNote.setImageBitmap(BitmapFactory.decodeFile(alReadyAvailableNote.getImgpath()));
+            imageNote.setVisibility(View.VISIBLE);
+            selectedImagePath = alReadyAvailableNote.getImgpath();
+        }
+
+        if(alReadyAvailableNote.getWeb_link() != null && !alReadyAvailableNote.getWeb_link().trim().isEmpty()){
+            textWebURL.setText(alReadyAvailableNote.getWeb_link());
+            layoutWebURL.setVisibility(View.VISIBLE);
+        }
     }
 
     private void guardar(){
@@ -121,6 +147,10 @@ public class CreateNoteActivity extends AppCompatActivity {
 
         if(layoutWebURL.getVisibility() == View.VISIBLE){
             miNota.setWeb_link(textWebURL.getText().toString());
+        }
+
+        if(alReadyAvailableNote != null){
+            miNota.setId(alReadyAvailableNote.getId());
         }
 
         @SuppressLint("StaticFieldLeak")
@@ -227,6 +257,23 @@ public class CreateNoteActivity extends AppCompatActivity {
                 setViewSubIndicaColor();
             }
         });
+
+        if(alReadyAvailableNote != null && alReadyAvailableNote.getColor() != null && !alReadyAvailableNote.getColor().trim().isEmpty()){
+            switch (alReadyAvailableNote.getColor()){
+                case "#FDBE3B":
+                    layoutExtra.findViewById(R.id.viewColor2).performClick();
+                    break;
+                case "#FF4842":
+                    layoutExtra.findViewById(R.id.viewColor3).performClick();
+                    break;
+                case "#3A52FC":
+                    layoutExtra.findViewById(R.id.viewColor4).performClick();
+                    break;
+                case "#000000":
+                    layoutExtra.findViewById(R.id.viewColor5).performClick();
+                    break;
+            }
+        }
 
         layoutExtra.findViewById(R.id.layoutAddImage).setOnClickListener((v) -> {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
