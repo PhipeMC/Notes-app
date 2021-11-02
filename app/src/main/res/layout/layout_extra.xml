@@ -161,8 +161,10 @@
         android:id="@+id/layoutAddImage"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_35sdp"
-        android:layout_margin="@dimen/_10sdp"
-        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
 
@@ -178,11 +180,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"
-            android:fontFamily="casual"
             android:includeFontPadding="false"
             android:text="@string/add_image"
             android:textColor="@color/colorIcons"
-            android:textSize="@dimen/_12sdp"/>
+            android:textSize="@dimen/_17sdp"/>
 
 
     </LinearLayout>
@@ -194,7 +195,7 @@
         android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_10sdp"
-        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
         
@@ -210,13 +211,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"
-            android:fontFamily="casual"
             android:includeFontPadding="false"
             android:text="@string/add_uri"
             android:textColor="@color/colorIcons"
-            android:textSize="@dimen/_12sdp"/>
+            android:textSize="@dimen/_17sdp"/>
         
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutDelete"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
         
+        <ImageView
+            android:layout_width="@dimen/_22sdp"
+            android:layout_height="@dimen/_22sdp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_delete"
+            app:tint="@color/colorDelete"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:includeFontPadding="false"
+            android:text="@string/delete_note"
+            android:textColor="@color/colorDelete"
+            android:textSize="@dimen/_17ssp" />
+
     </LinearLayout>
 
 </LinearLayout>

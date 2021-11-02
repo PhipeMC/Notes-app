@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         adaptadorNotes = new AdaptadorNotes(listaNotas, this);
         notesRecyclerView.setAdapter(adaptadorNotes);
 
-        mostarNotas(REQUEST_CODE_SHOW_NOTES);
+        mostarNotas(REQUEST_CODE_SHOW_NOTES, false);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         startActivityForResult(intent, REQUEST_CODE_UPDATE_NOTE);
     }
 
-    private void mostarNotas(final int requestCode){
+    private void mostarNotas(final int requestCode, final boolean isDeleted){
 
         @SuppressLint("StaticFieldLeak")
         class obtenerNotas extends AsyncTask<Void, Void, List<Note>>{
@@ -90,8 +90,12 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
                     notesRecyclerView.smoothScrollToPosition(0);
                 }else if(requestCode == REQUEST_CODE_UPDATE_NOTE){
                     listaNotas.remove(noteClickedPosition);
-                    listaNotas.add(noteClickedPosition, notas.get(noteClickedPosition));
-                    adaptadorNotes.notifyItemChanged(noteClickedPosition);
+                    if(isDeleted){
+                        adaptadorNotes.notifyItemRemoved(noteClickedPosition);
+                    }else{
+                        listaNotas.add(noteClickedPosition, notas.get(noteClickedPosition));
+                        adaptadorNotes.notifyItemChanged(noteClickedPosition);
+                    }
                 }
             }
 
@@ -103,10 +107,10 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_CODE_ADD_NOTE && resultCode == RESULT_OK){
-            mostarNotas(REQUEST_CODE_ADD_NOTE);
+            mostarNotas(REQUEST_CODE_ADD_NOTE, false);
         }else if(requestCode == REQUEST_CODE_UPDATE_NOTE && resultCode == RESULT_OK){
             if(data != null){
-                mostarNotas(REQUEST_CODE_UPDATE_NOTE);
+                mostarNotas(REQUEST_CODE_UPDATE_NOTE, data.getBooleanExtra("isNoteDeleted", false));
             }
         }
     }

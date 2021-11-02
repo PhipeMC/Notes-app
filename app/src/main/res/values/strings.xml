@@ -9,8 +9,11 @@
     <string name="extra">Extra</string>
     <string name="add_image">Add Image</string>
     <string name="add_uri">Add Uri</string>
-    <string name="enter_URL">Introduce una URL</string>
-    <string name="add">Añada Texto</string>
-    <string name="a_adir">añadir</string>
-    <string name="cancelar">Cancelar</string>
+    <string name="enter_URL">Type a URLa</string>
+    <string name="add">Type text here...</string>
+    <string name="a_adir">Add</string>
+    <string name="cancelar">Cancel</string>
+    <string name="delete_note">Delete note</string>
+    <string name="delete_question">Are you sure you want to delete this note?</string>
+    <string name="mytask">My Tasks</string>
 </resources>
