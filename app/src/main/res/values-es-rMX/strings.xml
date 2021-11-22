@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">notesapp</string>
+    <string name="mynotes">Mis notas</string>
+    <string name="string_notes">Buscar notas</string>
+    <string name="note_title">Título de nota</string>
+    <string name="note_subtitle">Subtítulo de nota</string>
+    <string name="type_here">Ingresa el texto aquí</string>
+    <string name="vario">Vario</string>
+    <string name="extra">Extra</string>
+    <string name="add_image">Agregar imagen</string>
+    <string name="add_uri">Agregar URL</string>
+    <string name="enter_URL">Ingresa una URL</string>
+    <string name="add">Ingresa el texto aquí...</string>
+    <string name="a_adir">Agregar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="delete_note">Eliminar nota</string>
+    <string name="delete_question">¿Estas seguro que quieres eliminar la nota?</string>
+    <string name="mytask">Mis tareas</string>
+    <string name="add_record">Agregar grabación</string>
+    <string name="permission_denied">Permiso denegado</string>
+    <string name="pick_color">Elegir color</string>
+    <string name="note_title_empty">El título no puede ser un campo vacío</string>
+    <string name="note_body_empty">La nota debe contener algo</string>
+</resources>

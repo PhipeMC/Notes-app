@@ -75,7 +75,7 @@ public class AdaptadorNotes extends RecyclerView.Adapter<AdaptadorNotes.NoteView
 
     public static class NoteViewHolder extends RecyclerView.ViewHolder{
 
-        TextView textTitulo, textSubtitulo, textFecha;
+        TextView textTitulo, textSubtitulo;
         LinearLayout layoutNote;
         RoundedImageView imageNote;
 
@@ -83,7 +83,6 @@ public class AdaptadorNotes extends RecyclerView.Adapter<AdaptadorNotes.NoteView
             super(itemView);
             textTitulo = itemView.findViewById(R.id.textTitulo);
             textSubtitulo = itemView.findViewById(R.id.textSubtitulo);
-            //textFecha = itemView.findViewById(R.id.textFecha);
             layoutNote = itemView.findViewById(R.id.layoutNote);
             imageNote = itemView.findViewById(R.id.imageNote);
         }
@@ -95,7 +94,6 @@ public class AdaptadorNotes extends RecyclerView.Adapter<AdaptadorNotes.NoteView
             }else{
                 textSubtitulo.setText(nota.getSubtitle());
             }
-            //textFecha.setText(nota.getDate());
 
             GradientDrawable gradientDrawable = (GradientDrawable) layoutNote.getBackground();
             if(nota.getColor() != null){

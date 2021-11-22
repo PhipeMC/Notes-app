@@ -87,7 +87,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         layoutWebURL = findViewById(R.id.layoutWebURL);
         //Darle formato a una fecha
         textFecha.setText(
-                new SimpleDateFormat("EEEE, dd  MMMM yyyy HH:mm a", Locale.getDefault()).format(new Date())
+                new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault()).format(new Date())
         );
 
 
@@ -99,7 +99,7 @@ public class CreateNoteActivity extends AppCompatActivity {
             }
         });
 
-        selectedColor = "#333333";
+        selectedColor = "#FDBE3B";
         selectedImagePath = "";
 
         if(getIntent().getBooleanExtra("isViewOrUpdate", false)){
@@ -164,10 +164,10 @@ public class CreateNoteActivity extends AppCompatActivity {
 
     private void guardar(){
         if(tituloNota.getText().toString().trim().isEmpty()){
-            Toast.makeText(this, "El titulo no puede ser un campo vacio", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.note_title_empty, Toast.LENGTH_SHORT).show();
             return;
         }else if(cuerpoNota.getText().toString().trim().isEmpty()){
-            Toast.makeText(this, "La nota debe tener algo escrito", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.note_body_empty, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -229,7 +229,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         layoutExtra.findViewById(R.id.viewColor).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedColor="#333333";
+                selectedColor="#FDBE3B";
                 imgColor1.setImageResource(R.drawable.ic_done);
                 imgColor2.setImageResource(0);
                 imgColor3.setImageResource(0);
@@ -242,7 +242,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         layoutExtra.findViewById(R.id.viewColor2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedColor="#FDBE3B";
+                selectedColor="#00893C";
                 imgColor1.setImageResource(0);
                 imgColor2.setImageResource(R.drawable.ic_done);
                 imgColor3.setImageResource(0);
@@ -281,7 +281,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         layoutExtra.findViewById(R.id.viewColor5).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedColor="#000000";
+                selectedColor="#333333";
                 imgColor1.setImageResource(0);
                 imgColor2.setImageResource(0);
                 imgColor3.setImageResource(0);
@@ -293,7 +293,7 @@ public class CreateNoteActivity extends AppCompatActivity {
 
         if(alReadyAvailableNote != null && alReadyAvailableNote.getColor() != null && !alReadyAvailableNote.getColor().trim().isEmpty()){
             switch (alReadyAvailableNote.getColor()){
-                case "#FDBE3B":
+                case "#00893C":
                     layoutExtra.findViewById(R.id.viewColor2).performClick();
                     break;
                 case "#FF4842":
@@ -302,12 +302,13 @@ public class CreateNoteActivity extends AppCompatActivity {
                 case "#3A52FC":
                     layoutExtra.findViewById(R.id.viewColor4).performClick();
                     break;
-                case "#000000":
+                case "#333333":
                     layoutExtra.findViewById(R.id.viewColor5).performClick();
                     break;
             }
         }
 
+        /*
         layoutExtra.findViewById(R.id.layoutAddImage).setOnClickListener((v) -> {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 if(ContextCompat.checkSelfPermission(
@@ -320,7 +321,7 @@ public class CreateNoteActivity extends AppCompatActivity {
                 }else {
                     selectImage();
                 }
-        });
+        });*/
 
         layoutExtra.findViewById(R.id.layoutAddUrl).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -408,7 +409,7 @@ public class CreateNoteActivity extends AppCompatActivity {
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 selectImage();
             }else{
-                Toast.makeText(this, "Permiso Denegado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -451,44 +452,7 @@ public class CreateNoteActivity extends AppCompatActivity {
     }
 
     private void showAddURLDialog(){
-        if(dialogAddURL == null){
-            AlertDialog.Builder builder = new AlertDialog.Builder(CreateNoteActivity.this);
-            View view = LayoutInflater.from(this).inflate(
-                    R.layout.layout_url, (ViewGroup) findViewById(R.id.layoutAddUrlContainer)
-            );
-            builder.setView(view);
 
-            dialogAddURL = builder.create();
-            if(dialogAddURL.getWindow() !=null){
-                dialogAddURL.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-            }
-
-            final EditText inputURL = view.findViewById(R.id.inputURL);
-            inputURL.requestFocus();
-
-            view.findViewById(R.id.textAdd).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(inputURL.getText().toString().trim().isEmpty()){
-                        Toast.makeText(CreateNoteActivity.this, "Introduce la URL", Toast.LENGTH_SHORT).show();
-                    }else if(!Patterns.WEB_URL.matcher(inputURL.getText().toString()).matches()){
-                        Toast.makeText(CreateNoteActivity.this, "Introduce una URL valida", Toast.LENGTH_SHORT).show();
-                    }else{
-                        textWebURL.setText(inputURL.getText().toString());
-                        layoutWebURL.setVisibility(View.VISIBLE);
-                        dialogAddURL.dismiss();
-                    }
-                }
-            });
-
-            view.findViewById(R.id.textCancelar).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialogAddURL.dismiss();
-                }
-            });
-        }
-        dialogAddURL.show();
     }
 
 }

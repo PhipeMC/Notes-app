@@ -101,38 +101,6 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             }
         });
 
-        findViewById(R.id.imageAddNote).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(
-                        new Intent(getApplicationContext(), CreateNoteActivity.class),
-                        REQUEST_CODE_ADD_NOTE
-                );
-            }
-        });
-
-        findViewById(R.id.imageAddImage).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ContextCompat.checkSelfPermission(
-                        getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(
-                            MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                            REQUEST_CODE_SELECT_PERMISSION
-                    );
-                } else {
-                    selectImage();
-                }
-            }
-        });
-
-        findViewById(R.id.imageAddWebLink).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
 
     @Override
@@ -237,49 +205,5 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
                 }
             }
         }
-    }
-
-    private void showAddURLDialog() {
-        if (dialogAddURL == null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            View view = LayoutInflater.from(this).inflate(
-                    R.layout.layout_url, (ViewGroup) findViewById(R.id.layoutAddUrlContainer)
-            );
-            builder.setView(view);
-
-            dialogAddURL = builder.create();
-            if (dialogAddURL.getWindow() != null) {
-                dialogAddURL.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-            }
-
-            final EditText inputURL = view.findViewById(R.id.inputURL);
-            inputURL.requestFocus();
-
-            view.findViewById(R.id.textAdd).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (inputURL.getText().toString().trim().isEmpty()) {
-                        Toast.makeText(MainActivity.this, "Introduce la URL", Toast.LENGTH_SHORT).show();
-                    } else if (!Patterns.WEB_URL.matcher(inputURL.getText().toString()).matches()) {
-                        Toast.makeText(MainActivity.this, "Introduce una URL valida", Toast.LENGTH_SHORT).show();
-                    } else {
-                        dialogAddURL.dismiss();
-                    }
-                }
-            });
-
-            view.findViewById(R.id.textCancelar).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialogAddURL.dismiss();
-                    Intent intent = new Intent(getApplicationContext(), CreateNoteActivity.class);
-                    intent.putExtra("isFromQuickActions", true);
-                    intent.putExtra("quickActionType", "URL");
-                    intent.putExtra("URL", inputURL.getText().toString());
-                    startActivityForResult(intent, REQUEST_CODE_ADD_NOTE);
-                }
-            });
-        }
-        dialogAddURL.show();
     }
 }

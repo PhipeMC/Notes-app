@@ -41,17 +41,4 @@
         android:textColor="@color/colorNoteSubtitleText"
         android:textSize="@dimen/_12ssp" />
 
-    <!--
-    <TextView
-        android:id="@+id/textFecha"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:layout_marginEnd="@dimen/_8sdp"
-        android:layout_marginBottom="@dimen/_8sdp"
-        android:includeFontPadding="false"
-        android:textColor="@color/colorNoteSubtitleText"
-        android:textSize="@dimen/_7ssp" /> -->
-
-
 </LinearLayout>

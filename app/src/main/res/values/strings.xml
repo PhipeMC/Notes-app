@@ -16,4 +16,9 @@
     <string name="delete_note">Delete note</string>
     <string name="delete_question">Are you sure you want to delete this note?</string>
     <string name="mytask">My Tasks</string>
+    <string name="add_record">Add recording</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="pick_color">Pick color</string>
+    <string name="note_title_empty">The title cannot be an empty field</string>
+    <string name="note_body_empty">The note must contain something</string>
 </resources>

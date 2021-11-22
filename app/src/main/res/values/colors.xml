@@ -20,10 +20,11 @@
     <color name="colorNoteTitleText">#FAFAFA</color>
     <color name="colorNoteSubtitleText">#D7D7D7</color>
     <color name="colorMiscellaneousBackground">#1F1F1F</color>
-    <color name="colorNoteColor2">#FDBE3B</color>
+    <color name="colorNoteColor1">#FDBE3B</color>
+    <color name="colorNoteColor2">#00893C</color>
     <color name="colorNoteColor3">#FF4842</color>
     <color name="colorNoteColor4">#3A52fC</color>
-    <color name="colorNoteColor5">#000000</color>
+    <color name="colorNoteColor5">#333333</color>
     <color name="colorDelete">#FF4842</color>
     <color name="colorSearchBackground">#333333</color>
 </resources>
