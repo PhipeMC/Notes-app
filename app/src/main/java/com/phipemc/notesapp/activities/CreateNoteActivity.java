@@ -308,7 +308,7 @@ public class CreateNoteActivity extends AppCompatActivity {
             }
         }
 
-        /*
+
         layoutExtra.findViewById(R.id.layoutAddImage).setOnClickListener((v) -> {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 if(ContextCompat.checkSelfPermission(
@@ -321,7 +321,7 @@ public class CreateNoteActivity extends AppCompatActivity {
                 }else {
                     selectImage();
                 }
-        });*/
+        });
 
         layoutExtra.findViewById(R.id.layoutAddUrl).setOnClickListener(new View.OnClickListener() {
             @Override

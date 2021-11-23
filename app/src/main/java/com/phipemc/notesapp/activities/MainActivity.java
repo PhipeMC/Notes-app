@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
     private int noteClickedPosition = -1;
 
     private AlertDialog dialogAddURL;
+    private AlertDialog dialogMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +66,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         addNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(
-                        new Intent(getApplicationContext(), CreateNoteActivity.class),
-                        REQUEST_CODE_ADD_NOTE
-                );
+                showDialog();
             }
         });
         notesRecyclerView = findViewById(R.id.notesRecyclerView);
@@ -205,5 +203,42 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
                 }
             }
         }
+    }
+
+    private void showDialog(){
+        if(dialogMenu == null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            View v = LayoutInflater.from(this).inflate(
+                    R.layout.layout_menu, (ViewGroup) findViewById(R.id.layoutMenuContainer)
+            );
+            builder.setView(v);
+            dialogMenu = builder.create();
+            if(dialogMenu.getWindow() != null){
+                dialogMenu.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            }
+            v.findViewById(R.id.note_menu).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialogMenu.dismiss();
+                    startActivityForResult(
+                            new Intent(getApplicationContext(), CreateNoteActivity.class),
+                            REQUEST_CODE_ADD_NOTE
+                    );
+                }
+            });
+
+            v.findViewById(R.id.task_menu).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialogMenu.dismiss();
+                    startActivityForResult(
+                            new Intent(getApplicationContext(), CreateTaskActivity.class),
+                            REQUEST_CODE_ADD_NOTE
+                    );
+                }
+            });
+        }
+
+        dialogMenu.show();
     }
 }

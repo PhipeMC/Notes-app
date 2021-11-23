@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">notesapp</string>
+    <string name="app_name">Mis Notas</string>
     <string name="mynotes">Mis notas</string>
     <string name="string_notes">Buscar notas</string>
     <string name="note_title">Título de nota</string>
@@ -22,4 +22,11 @@
     <string name="pick_color">Elegir color</string>
     <string name="note_title_empty">El título no puede ser un campo vacío</string>
     <string name="note_body_empty">La nota debe contener algo</string>
+    <string name="task_name">Nombre de la tarea</string>
+    <string name="task_date">Fecha de recordatorio:</string>
+    <string name="task_date_button">Establecer recordatorio</string>
+    <string name="task_create">Crear tarea</string>
+    <string name="note_create">Crear nota</string>
+    <string name="create_title">¿Qué es lo quie quieres crear?</string>
+    <string name="denied_permission">Permiso denegado</string>
 </resources>

@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">notesapp</string>
-    <string name="mynotes">My Notes</string>
+    <string name="app_name">My Notes</string>
+    <string name="mynotes">My notes</string>
     <string name="string_notes">Search notes</string>
     <string name="note_title">Note Title</string>
     <string name="note_subtitle">Note Subtitle</string>
@@ -21,4 +21,11 @@
     <string name="pick_color">Pick color</string>
     <string name="note_title_empty">The title cannot be an empty field</string>
     <string name="note_body_empty">The note must contain something</string>
+    <string name="task_name">Task name</string>
+    <string name="task_date">Date reminder:</string>
+    <string name="task_date_button">Define reminder</string>
+    <string name="task_create">Create task</string>
+    <string name="note_create">Create note</string>
+    <string name="create_title">What do you want to create?</string>
+    <string name="denied_permission">Permission denied</string>
 </resources>
