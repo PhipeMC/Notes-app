@@ -58,7 +58,6 @@ public class CreateNoteActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
 
-    private AlertDialog dialogAddURL;
     private AlertDialog dialogDeleteNote;
 
     private Note alReadyAvailableNote;
@@ -67,8 +66,9 @@ public class CreateNoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_note);
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
 
+        //boton de regreso al main
         ImageView imageBack = findViewById(R.id.image_back);
         imageBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +90,7 @@ public class CreateNoteActivity extends AppCompatActivity {
                 new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault()).format(new Date())
         );
 
-
+        //boton guardar
         ImageView guardar =  findViewById(R.id.img_done_button);
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,6 +143,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         setViewSubIndicaColor();
     }
 
+    //vista para poder ver o editar... separar en mi opinion
     private void setViewOrUpdate(){
         tituloNota.setText(alReadyAvailableNote.getTitle());
         subtituloNota.setText(alReadyAvailableNote.getSubtitle());
@@ -219,95 +220,6 @@ public class CreateNoteActivity extends AppCompatActivity {
                 }
             }
         });
-
-        final ImageView imgColor1 = layoutExtra.findViewById(R.id.imgColor1);
-        final ImageView imgColor2 = layoutExtra.findViewById(R.id.imgColor2);
-        final ImageView imgColor3 = layoutExtra.findViewById(R.id.imgColor3);
-        final ImageView imgColor4 = layoutExtra.findViewById(R.id.imgColor4);
-        final ImageView imgColor5 = layoutExtra.findViewById(R.id.imgColor5);
-
-        layoutExtra.findViewById(R.id.viewColor).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectedColor="#FDBE3B";
-                imgColor1.setImageResource(R.drawable.ic_done);
-                imgColor2.setImageResource(0);
-                imgColor3.setImageResource(0);
-                imgColor4.setImageResource(0);
-                imgColor5.setImageResource(0);
-                setViewSubIndicaColor();
-            }
-        });
-
-        layoutExtra.findViewById(R.id.viewColor2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectedColor="#00893C";
-                imgColor1.setImageResource(0);
-                imgColor2.setImageResource(R.drawable.ic_done);
-                imgColor3.setImageResource(0);
-                imgColor4.setImageResource(0);
-                imgColor5.setImageResource(0);
-                setViewSubIndicaColor();
-            }
-        });
-
-        layoutExtra.findViewById(R.id.viewColor3).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectedColor="#FF4842";
-                imgColor1.setImageResource(0);
-                imgColor2.setImageResource(0);
-                imgColor3.setImageResource(R.drawable.ic_done);
-                imgColor4.setImageResource(0);
-                imgColor5.setImageResource(0);
-                setViewSubIndicaColor();
-            }
-        });
-
-        layoutExtra.findViewById(R.id.viewColor4).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectedColor="#3A52fC";
-                imgColor1.setImageResource(0);
-                imgColor2.setImageResource(0);
-                imgColor3.setImageResource(0);
-                imgColor4.setImageResource(R.drawable.ic_done);
-                imgColor5.setImageResource(0);
-                setViewSubIndicaColor();
-            }
-        });
-
-        layoutExtra.findViewById(R.id.viewColor5).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectedColor="#333333";
-                imgColor1.setImageResource(0);
-                imgColor2.setImageResource(0);
-                imgColor3.setImageResource(0);
-                imgColor4.setImageResource(0);
-                imgColor5.setImageResource(R.drawable.ic_done);
-                setViewSubIndicaColor();
-            }
-        });
-
-        if(alReadyAvailableNote != null && alReadyAvailableNote.getColor() != null && !alReadyAvailableNote.getColor().trim().isEmpty()){
-            switch (alReadyAvailableNote.getColor()){
-                case "#00893C":
-                    layoutExtra.findViewById(R.id.viewColor2).performClick();
-                    break;
-                case "#FF4842":
-                    layoutExtra.findViewById(R.id.viewColor3).performClick();
-                    break;
-                case "#3A52FC":
-                    layoutExtra.findViewById(R.id.viewColor4).performClick();
-                    break;
-                case "#333333":
-                    layoutExtra.findViewById(R.id.viewColor5).performClick();
-                    break;
-            }
-        }
-
 
         layoutExtra.findViewById(R.id.layoutAddImage).setOnClickListener((v) -> {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);

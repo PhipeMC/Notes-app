@@ -34,6 +34,7 @@ public class AdaptadorNotes extends RecyclerView.Adapter<AdaptadorNotes.NoteView
     private Timer timer;
     private List<Note> notesSource;
 
+    //Del main le pasamos los parametros necesarios para actuar con el adapatador
     public AdaptadorNotes(List<Note> notes, NotesListener notesListener){
         this.notas = notes;
         this.notesListener = notesListener;
@@ -52,6 +53,7 @@ public class AdaptadorNotes extends RecyclerView.Adapter<AdaptadorNotes.NoteView
         );
     }
 
+    //Settea las nuevas notas en la vista segun el desplazamiento, les da el estilo
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         holder.setNote(notas.get(position));
@@ -88,6 +90,7 @@ public class AdaptadorNotes extends RecyclerView.Adapter<AdaptadorNotes.NoteView
         }
 
         void setNote(Note nota){
+            //Estructura de la vista previa
             textTitulo.setText(nota.getTitle());
             if(nota.getSubtitle().trim().isEmpty()){
                 textSubtitulo.setVisibility(View.GONE);
@@ -95,6 +98,7 @@ public class AdaptadorNotes extends RecyclerView.Adapter<AdaptadorNotes.NoteView
                 textSubtitulo.setText(nota.getSubtitle());
             }
 
+            //Color de la nota
             GradientDrawable gradientDrawable = (GradientDrawable) layoutNote.getBackground();
             if(nota.getColor() != null){
                 gradientDrawable.setColor(Color.parseColor(nota.getColor()));
@@ -102,6 +106,7 @@ public class AdaptadorNotes extends RecyclerView.Adapter<AdaptadorNotes.NoteView
                 gradientDrawable.setColor(Color.parseColor("#333333"));
             }
 
+            ///vista previa de la nota
             if(nota.getImgpath() != null){
                 imageNote.setImageBitmap(BitmapFactory.decodeFile(nota.getImgpath()));
                 imageNote.setVisibility(View.VISIBLE);
@@ -112,6 +117,7 @@ public class AdaptadorNotes extends RecyclerView.Adapter<AdaptadorNotes.NoteView
 
     }
 
+    ///Prara la busqueda de notas
     public void searchNotes(final String searchKeyword){
         timer = new Timer();
         timer.schedule(new TimerTask() {

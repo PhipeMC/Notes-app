@@ -10,13 +10,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.phipemc.notesapp.R;
 
-public class CreateTaskActivity extends Activity {
-    private TextView datetime;
+public class CreateTaskActivity extends AppCompatActivity {
     private EditText taskName;
+    private TextView datetime;
     private Button alarmBtn;
+
+    private String selectedColor;
+    private String selectedImagePath;
+
+    private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
+    private static final int REQUEST_CODE_SELECT_IMAGE = 2;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

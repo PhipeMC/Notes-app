@@ -123,4 +123,61 @@ public class Note implements Serializable {
                 ", web_link='" + web_link + '\'' +
                 '}';
     }
+
+    @Entity(tableName = "tareas")
+    public class Tareas implements Serializable {
+        @PrimaryKey(autoGenerate = true)
+        private int id;
+
+        @ColumnInfo(name = "title")
+        private String title;
+
+        @ColumnInfo(name = "date")
+        private String date;
+
+        @ColumnInfo(name = "img_path")
+        private String imgpath;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
+        public String getImgpath() {
+            return imgpath;
+        }
+
+        public void setImgpath(String imgpath) {
+            this.imgpath = imgpath;
+        }
+
+        @Override
+        public String toString() {
+            return "Tareas{" +
+                    "id=" + id +
+                    ", title='" + title + '\'' +
+                    ", date='" + date + '\'' +
+                    ", imgpath='" + imgpath + '\'' +
+                    '}';
+        }
+    }
 }

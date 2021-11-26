@@ -37,10 +37,25 @@
         <entry key="..\:/Users/PhipeMC/StudioProjects/Notes-app/app/src/main/res/layout/all_notes_layout.xml" value="0.5192708333333333" />
         <entry key="..\:/Users/PhipeMC/StudioProjects/Notes-app/app/src/main/res/layout/layout_delete_note.xml" value="0.5192708333333333" />
         <entry key="..\:/Users/PhipeMC/StudioProjects/Notes-app/app/src/main/res/layout/layout_menu.xml" value="0.5192708333333333" />
+        <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/drawable/background_add_button.xml" value="0.2203125" />
+        <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/drawable/background_delete.xml" value="0.2203125" />
+        <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/drawable/background_dialog.xml" value="0.2203125" />
+        <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/drawable/background_done_button.xml" value="0.2203125" />
+        <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/drawable/background_extra.xml" value="0.2203125" />
+        <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/drawable/background_note.xml" value="0.2203125" />
+        <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/drawable/background_note_color_1.xml" value="0.2203125" />
+        <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/drawable/background_search.xml" value="0.2203125" />
+        <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/drawable/background_subtitle_indicator.xml" value="0.2203125" />
+        <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/layout/activity_create_note.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/layout/activity_main.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/layout/activity_task_create.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/layout/all_notes_layout.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/layout/fragment_notas.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/layout/fragment_task.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/layout/layout_delete_note.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/layout/layout_extra.xml" value="0.33" />
         <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/layout/layout_menu.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/leogu/AndroidStudioProjects/Profe/Proyecto/app/src/main/res/layout/layout_url.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/leogu/Notes-app/app/src/main/res/drawable-v24/background_note_color_2.xml" value="0.2203125" />
         <entry key="..\:/Users/leogu/Notes-app/app/src/main/res/drawable-v24/background_note_color_3.xml" value="0.2203125" />
         <entry key="..\:/Users/leogu/Notes-app/app/src/main/res/drawable-v24/background_note_color_4.xml" value="0.2203125" />
