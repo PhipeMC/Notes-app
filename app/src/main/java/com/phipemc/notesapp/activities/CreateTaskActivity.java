@@ -25,6 +25,8 @@ public class CreateTaskActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
 
+    //private ActivityMainBinding
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +39,23 @@ public class CreateTaskActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        ImageView imgSave = findViewById(R.id.img_done_button_task);
+        imgSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                guardar();
+            }
+        });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    public void guardar(){
 
     }
 }

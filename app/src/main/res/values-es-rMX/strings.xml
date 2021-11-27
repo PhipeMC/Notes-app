@@ -29,4 +29,8 @@
     <string name="note_create">Crear nota</string>
     <string name="create_title">¿Qué es lo quie quieres crear?</string>
     <string name="denied_permission">Permiso denegado</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="notas">Notas</string>
+    <string name="tareas">Tareas</string>
+    <string name="add_video">Agregar video</string>
 </resources>

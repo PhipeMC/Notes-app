@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.phipemc.notesapp.entities.Note;
+import com.phipemc.notesapp.entities.Task;
 
 import java.util.List;
 
@@ -14,12 +15,12 @@ import java.util.List;
 public interface TaskDao {
 
     @Query("select * from tareas order by id desc")
-    List<Note.Tareas> getAll();
+    List<Task> getAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertNote(Note.Tareas tareas);
+    void insertNote(Task tareas);
 
     @Delete
-    void deleteNote(Note.Tareas tareas);
+    void deleteNote(Task tareas);
 
 }

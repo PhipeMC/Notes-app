@@ -24,6 +24,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -56,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
     private int noteClickedPosition = -1;
 
     private AlertDialog dialogMenu;
+
+    float x1,x2,y1,y2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -253,5 +256,24 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         }
 
         dialogMenu.show();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch(event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                x1 = event.getX();
+                y1 = event.getY();
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = event.getX();
+                y2 = event.getY();
+                if(x1 > x2){
+                    Intent i = new Intent(MainActivity.this, CreateTaskActivity.class);
+                    startActivity(i);
+                }
+                break;
+        }
+        return false;
     }
 }

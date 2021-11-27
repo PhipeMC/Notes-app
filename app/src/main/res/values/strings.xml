@@ -30,7 +30,8 @@
     <string name="denied_permission">Permission denied</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="notas">Notas</string>
-    <string name="tareas">Tareas</string>
+    <string name="notas">Notes</string>
+    <string name="tareas">Tasks</string>
     <string name="add_video">Add video</string>
+    <string name="task_notification_title">Reminder</string>
 </resources>
