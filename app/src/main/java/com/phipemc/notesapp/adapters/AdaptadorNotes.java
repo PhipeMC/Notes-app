@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.phipemc.notesapp.R;
 import com.phipemc.notesapp.entities.Note;
+import com.phipemc.notesapp.entities.Task;
 import com.phipemc.notesapp.listeners.NotesListener;
 
 import java.util.ArrayList;
@@ -27,18 +28,18 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class AdaptadorNotes extends RecyclerView.Adapter<AdaptadorNotes.NoteViewHolder>{
+public class AdaptadorNotes extends RecyclerView.Adapter<AdaptadorNotes.NoteViewHolder> {
 
-    private List<Note> notas;
+    private List<Object> papers;
     private NotesListener notesListener;
     private Timer timer;
-    private List<Note> notesSource;
+    private List<Object> papersSource;
 
     //Del main le pasamos los parametros necesarios para actuar con el adapatador
-    public AdaptadorNotes(List<Note> notes, NotesListener notesListener){
-        this.notas = notes;
+    public AdaptadorNotes(List<Object> papers, NotesListener notesListener) {
+        this.papers = papers;
         this.notesListener = notesListener;
-        notesSource = notes;
+        papersSource = papers;
     }
 
     @NonNull
@@ -56,28 +57,28 @@ public class AdaptadorNotes extends RecyclerView.Adapter<AdaptadorNotes.NoteView
     //Settea las nuevas notas en la vista segun el desplazamiento, les da el estilo
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        holder.setNote(notas.get(position));
+        holder.setPaper(papers.get(position));
         holder.layoutNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                notesListener.onNoteClicked(notas.get(position), position);
+                notesListener.onNoteClicked(papers.get(position), position);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return notas.size();
+        return papers.size();
     }
 
     @Override
-    public int getItemViewType(int position){
+    public int getItemViewType(int position) {
         return position;
     }
 
-    public static class NoteViewHolder extends RecyclerView.ViewHolder{
+    public static class NoteViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textTitulo, textSubtitulo;
+        TextView textTitulo, textSubtitulo, textFecha;
         LinearLayout layoutNote;
         RoundedImageView imageNote;
 
@@ -85,56 +86,99 @@ public class AdaptadorNotes extends RecyclerView.Adapter<AdaptadorNotes.NoteView
             super(itemView);
             textTitulo = itemView.findViewById(R.id.textTitulo);
             textSubtitulo = itemView.findViewById(R.id.textSubtitulo);
+            textFecha = itemView.findViewById(R.id.textFecha);
             layoutNote = itemView.findViewById(R.id.layoutNote);
             imageNote = itemView.findViewById(R.id.imageNote);
         }
 
-        void setNote(Note nota){
-            //Estructura de la vista previa
-            textTitulo.setText(nota.getTitle());
-            if(nota.getSubtitle().trim().isEmpty()){
+        void setPaper(Object paper) {
+            if (paper instanceof Task) {
+                //Es una tarea
+                Task task = (Task) paper;
+
+                //Apariencia de la tarea
+                textTitulo.setText(task.getTitle());
+                textFecha.setText(task.getDate());
                 textSubtitulo.setVisibility(View.GONE);
-            }else{
-                textSubtitulo.setText(nota.getSubtitle());
-            }
 
-            //Color de la nota
-            GradientDrawable gradientDrawable = (GradientDrawable) layoutNote.getBackground();
-            if(nota.getColor() != null){
-                gradientDrawable.setColor(Color.parseColor(nota.getColor()));
-            }else{
-                gradientDrawable.setColor(Color.parseColor("#333333"));
-            }
+                //Color de la tarea
+                GradientDrawable gradientDrawable = (GradientDrawable) layoutNote.getBackground();
+                if (task.getColor() != null) {
+                    gradientDrawable.setColor(Color.parseColor(task.getColor()));
+                } else {
+                    gradientDrawable.setColor(Color.parseColor("#333333"));
+                }
 
-            ///vista previa de la nota
-            if(nota.getImgpath() != null){
-                imageNote.setImageBitmap(BitmapFactory.decodeFile(nota.getImgpath()));
-                imageNote.setVisibility(View.VISIBLE);
-            }else{
-                imageNote.setVisibility(View.GONE);
+                //Vista previa de la tarea con la imagen, SOLO IMAGEN
+                if (task.getImgpath() != null) {
+                    imageNote.setImageBitmap(BitmapFactory.decodeFile(task.getImgpath()));
+                    imageNote.setVisibility(View.VISIBLE);
+                } else {
+                    imageNote.setVisibility(View.GONE);
+                }
+
+            } else {
+                //Es una nota
+                Note note = (Note) paper;
+
+                //Apariencia de la nota
+                textTitulo.setText(note.getTitle());
+                textFecha.setText(note.getDate());
+                if (note.getSubtitle().trim().isEmpty()) {
+                    textSubtitulo.setVisibility(View.GONE);
+                } else {
+                    textSubtitulo.setText(note.getSubtitle());
+                }
+
+                //Color de la nota
+                GradientDrawable gradientDrawable = (GradientDrawable) layoutNote.getBackground();
+                if (note.getColor() != null) {
+                    gradientDrawable.setColor(Color.parseColor(note.getColor()));
+                } else {
+                    gradientDrawable.setColor(Color.parseColor("#333333"));
+                }
+
+                //Vista previa de la nota con la imagen, SOLO IMAGEN
+                if (note.getImgpath() != null) {
+                    imageNote.setImageBitmap(BitmapFactory.decodeFile(note.getImgpath()));
+                    imageNote.setVisibility(View.VISIBLE);
+                } else {
+                    imageNote.setVisibility(View.GONE);
+                }
             }
         }
 
     }
 
     ///Prara la busqueda de notas
-    public void searchNotes(final String searchKeyword){
+    public void searchNotes(final String searchKeyword) {
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if(searchKeyword.trim().isEmpty()){
-                    notas = notesSource;
+                if (searchKeyword.trim().isEmpty()) {
+                    papers = papersSource;
                 } else {
-                    ArrayList<Note> temp = new ArrayList<>();
-                    for(Note note : notesSource){
-                        if(note.getTitle().toLowerCase().contains(searchKeyword.toLowerCase())
-                            || note.getSubtitle().toLowerCase().contains(searchKeyword.toLowerCase())
-                            || note.getNote_text().toLowerCase().contains(searchKeyword.toLowerCase())){
-                            temp.add(note);
+                    ArrayList<Object> temp = new ArrayList<>();
+                    for (Object paper : papersSource) {
+                        if(paper instanceof Task){
+                            Task t = (Task) paper;
+                            if(t.getTitle().toLowerCase().contains(searchKeyword.toLowerCase())){
+                                temp.add(paper);
+                            }
+                        }else{
+                            Note n = (Note) paper;
+                            if (n.getTitle().toLowerCase().contains(searchKeyword.toLowerCase())
+                                    || n.getSubtitle().toLowerCase().contains(searchKeyword.toLowerCase())
+                                    || n.getNote_text().toLowerCase().contains(searchKeyword.toLowerCase())){
+                                temp.add(paper);
+                            }
+
                         }
+
+
                     }
-                    notas = temp;
+                    papers = temp;
                 }
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
@@ -146,8 +190,8 @@ public class AdaptadorNotes extends RecyclerView.Adapter<AdaptadorNotes.NoteView
         }, 500);
     }
 
-    public void cancelTimer(){
-        if(timer != null){
+    public void cancelTimer() {
+        if (timer != null) {
             timer.cancel();
         }
     }

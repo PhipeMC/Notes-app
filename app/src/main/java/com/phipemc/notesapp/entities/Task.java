@@ -20,6 +20,9 @@ public class Task implements Serializable {
     @ColumnInfo(name = "img_path")
     private String imgpath;
 
+    @ColumnInfo(name = "color")
+    private String color;
+
     public int getId() {
         return id;
     }
@@ -52,13 +55,22 @@ public class Task implements Serializable {
         this.imgpath = imgpath;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     @Override
     public String toString() {
-        return "Tareas{" +
+        return "Task{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", date='" + date + '\'' +
                 ", imgpath='" + imgpath + '\'' +
+                ", color='" + color + '\'' +
                 '}';
     }
 }

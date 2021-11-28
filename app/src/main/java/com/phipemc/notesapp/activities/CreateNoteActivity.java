@@ -99,7 +99,7 @@ public class CreateNoteActivity extends AppCompatActivity {
             }
         });
 
-        selectedColor = "#FDBE3B";
+        selectedColor = "#efa639";
         selectedImagePath = "";
 
         if(getIntent().getBooleanExtra("isViewOrUpdate", false)){
@@ -125,6 +125,7 @@ public class CreateNoteActivity extends AppCompatActivity {
             }
         });
 
+        //extra
         if(getIntent().getBooleanExtra("isFromQuickActions", false)){
             String type = getIntent().getStringExtra("quickActionsType");
             if(type != null){
@@ -143,7 +144,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         setViewSubIndicaColor();
     }
 
-    //vista para poder ver o editar... separar en mi opinion
+    //vista para poder ver o editar
     private void setViewOrUpdate(){
         tituloNota.setText(alReadyAvailableNote.getTitle());
         subtituloNota.setText(alReadyAvailableNote.getSubtitle());
@@ -192,6 +193,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         class guardarNota extends AsyncTask<Void, Void, Void>{
             @Override
             protected Void doInBackground(Void...voids){
+                //ojo
                 databaseNotes.getDatabase(getApplicationContext()).dao().insertNote(miNota);
                 return null;
             }
