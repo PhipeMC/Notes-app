@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.phipemc.notesapp.entities.Note;
+import com.phipemc.notesapp.entities.Task;
 
 import java.util.List;
 
@@ -21,4 +22,11 @@ public interface NoteDao {
 
     @Delete
     void deleteNote(Note note);
+
+    @Query("select * from notes order by id desc limit 1")
+    Note getLast();
+
+    @Query("select count(*) from notes order by id desc limit 1")
+    int getSize();
+
 }

@@ -58,13 +58,16 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
 
     private RecyclerView notesRecyclerView;
     private List<Object> listaPapers;
+    private List<Note> listaNotas;
+    private List<Task> listaTareas;
+
     private AdaptadorNotes adaptadorNotes;
 
     private int paperClickedPosition = -1;
 
     private AlertDialog dialogMenu;
 
-    float x1,x2,y1,y2;
+    float x1, x2, y1, y2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,58 +124,66 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
     @Override
     public void onNoteClicked(Object papers, int position) {
         paperClickedPosition = position;
-        if(papers instanceof Note){
+        if (papers instanceof Note) {
             Intent intent = new Intent(getApplicationContext(), CreateNoteActivity.class);
             intent.putExtra("isViewOrUpdate", true);
-            intent.putExtra("note",(Note) papers);
+            intent.putExtra("note", (Note) papers);
             startActivityForResult(intent, REQUEST_CODE_UPDATE_NOTE);
-        }else{
+        } else {
             Intent intent = new Intent(getApplicationContext(), CreateTaskActivity.class);
             intent.putExtra("isViewOrUpdate", true);
-            intent.putExtra("task",(Task) papers);
-            startActivityForResult(intent, REQUEST_CODE_UPDATE_NOTE);
+            intent.putExtra("task", (Task) papers);
+            startActivityForResult(intent, REQUEST_CODE_UPDATE_TASK);
         }
 
     }
 
 
-
-
     /*
-    * Mandas llamar el metodo y se ejecuta la clase para hacer de subproceso las acciones que queramos deacuerdo a nuestras
-    * variables
-    *
-    * */
+     * Mandas llamar el metodo y se ejecuta la clase para hacer de subproceso las acciones que queramos deacuerdo a nuestras
+     * variables
+     *
+     * */
     private void mostarPapers(final int requestCode, final boolean isDeleted) {
 
         @SuppressLint("StaticFieldLeak")
-        class obtenerNotas extends AsyncTask<Void, Void, List<Object>> {
+        class obtenerNotas extends AsyncTask<Void, Void, List<List<Object>>> {
             @Override
-            protected List<Object> doInBackground(Void... voids) {
-                List<Object> paper =  new ArrayList<>();
+            protected  List<List<Object>> doInBackground(Void... voids) {
+                List<Object> noteList = new ArrayList<>();
+                List<Object> taskList = new ArrayList<>();
 
                 List<Note> n = databaseNotes.getDatabase(getApplicationContext()).dao().getAll();
                 List<Task> t = databaseTasks.getDatabase(getApplicationContext()).dao().getAll();
 
-                for(Task task : t) {
-                    paper.add(task);
+                for (Task task : t) {
+                    taskList.add(task);
                 }
 
-                for(Note note : n) {
-                    paper.add(note);
+                for (Note note : n) {
+                    noteList.add(note);
                 }
+
+                List<List<Object>> paper = new ArrayList<>();
+                paper.add(0,noteList);
+                paper.add(1,taskList);
 
                 return paper;
             }
 
             @Override
-            protected void onPostExecute(List<Object> paper) {
+            protected void onPostExecute(List<List<Object>> paper) {
                 super.onPostExecute(paper);
                 if (requestCode == REQUEST_CODE_SHOW_NOTES) {
-                    listaPapers.addAll(paper);
+                    listaPapers.addAll(paper.get(0));
+                    listaPapers.addAll(paper.get(1));
                     adaptadorNotes.notifyDataSetChanged();
                 } else if (requestCode == REQUEST_CODE_ADD_NOTE) {
-                    listaPapers.add(0, paper.get(0));
+                    listaPapers.add(0, paper.get(0).get(0));
+                    adaptadorNotes.notifyItemInserted(0);
+                    notesRecyclerView.smoothScrollToPosition(0);
+                } else if (requestCode == REQUEST_CODE_ADD_TASK) {
+                    listaPapers.add(paper.get(0).size(), paper.get(1).get(0));
                     adaptadorNotes.notifyItemInserted(0);
                     notesRecyclerView.smoothScrollToPosition(0);
                 } else if (requestCode == REQUEST_CODE_UPDATE_NOTE) {
@@ -180,7 +191,15 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
                     if (isDeleted) {
                         adaptadorNotes.notifyItemRemoved(paperClickedPosition);
                     } else {
-                        listaPapers.add(paperClickedPosition, paper.get(paperClickedPosition));
+                        listaPapers.add(paperClickedPosition, paper.get(0).get(paperClickedPosition));
+                        adaptadorNotes.notifyItemChanged(paperClickedPosition);
+                    }
+                } else if (requestCode == REQUEST_CODE_UPDATE_TASK) {
+                    listaPapers.remove(paperClickedPosition);
+                    if (isDeleted) {
+                        adaptadorNotes.notifyItemRemoved(paperClickedPosition);
+                    } else {
+                        listaPapers.add(paperClickedPosition, paper.get(1).get(paperClickedPosition-paper.get(0).size()));
                         adaptadorNotes.notifyItemChanged(paperClickedPosition);
                     }
                 }
@@ -231,9 +250,15 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
 
         if (requestCode == REQUEST_CODE_ADD_NOTE && resultCode == RESULT_OK) {
             mostarPapers(REQUEST_CODE_ADD_NOTE, false);
+        } else if (requestCode == REQUEST_CODE_ADD_TASK && resultCode == RESULT_OK) {
+            mostarPapers(REQUEST_CODE_ADD_TASK, false);
         } else if (requestCode == REQUEST_CODE_UPDATE_NOTE && resultCode == RESULT_OK) {
             if (data != null) {
                 mostarPapers(REQUEST_CODE_UPDATE_NOTE, data.getBooleanExtra("isNoteDeleted", false));
+            }
+        } else if (requestCode == REQUEST_CODE_UPDATE_TASK && resultCode == RESULT_OK) {
+            if (data != null) {
+                mostarPapers(REQUEST_CODE_UPDATE_TASK, data.getBooleanExtra("isNoteDeleted", false));
             }
         } else if (requestCode == REQUEST_CODE_SELECT_IMG && resultCode == RESULT_OK) {
             if (data != null) {
@@ -283,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
                     dialogMenu.dismiss();
                     startActivityForResult(
                             new Intent(getApplicationContext(), CreateTaskActivity.class),
-                            REQUEST_CODE_ADD_NOTE
+                            REQUEST_CODE_ADD_TASK
                     );
                 }
             });
@@ -294,7 +319,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch(event.getAction()){
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 x1 = event.getX();
                 y1 = event.getY();
@@ -302,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             case MotionEvent.ACTION_UP:
                 x2 = event.getX();
                 y2 = event.getY();
-                if(x1 > x2){
+                if (x1 > x2) {
                     Intent i = new Intent(MainActivity.this, CreateTaskActivity.class);
                     startActivity(i);
                 }
@@ -310,7 +335,6 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         }
         return false;
     }
-
 
 
 }

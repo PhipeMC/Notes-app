@@ -23,4 +23,9 @@ public interface TaskDao {
     @Delete
     void deleteNote(Task tareas);
 
+    @Query("select * from tareas order by id desc limit 1")
+    Task getLast();
+
+    @Query("select count(*) from tareas order by id desc limit 1")
+    int getSize();
 }
