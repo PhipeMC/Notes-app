@@ -45,6 +45,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/image_back_task"
                 app:tint="@color/colorIcons" />
+            
 
             <EditText
                 android:id="@+id/inputTaskName"
@@ -74,6 +75,76 @@
                 app:layout_constraintEnd_toEndOf="@+id/inputTaskName"
                 app:layout_constraintStart_toStartOf="@id/inputTaskName"
                 app:layout_constraintTop_toBottomOf="@id/inputTaskName" />
+
+            <LinearLayout
+                android:id="@+id/LLFecha"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/textDateTimeTask">
+
+                <TextView
+                    android:id="@+id/tv_fecha"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:background="@null"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+                    android:textSize="20dp"
+                    android:hint="Date"
+                    android:textColor="@color/colorWhite"
+                    android:textColorHint="@color/colorTextHint"
+                    android:layout_width="@dimen/_180sdp"
+                    />
+
+                <Button
+                    android:padding="10dp"
+                    android:id="@+id/btn_selefecha"
+                    android:layout_margin="10dp"
+                    android:textColor="#fff"
+                    android:text="Select Date"
+                    android:background="#375481"
+                    app:backgroundTint="#375481"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LLHora"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/LLFecha">>
+
+                <TextView
+                    android:id="@+id/tv_hora"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:background="@null"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+                    android:textSize="20dp"
+                    android:hint="Hour"
+                    android:textColor="@color/colorWhite"
+                    android:textColorHint="@color/colorTextHint"
+                    android:layout_width="@dimen/_180sdp"/>
+
+                <Button
+                    android:padding="10dp"
+                    android:id="@+id/btn_selehora"
+                    android:layout_margin="10dp"
+                    android:background="#375481"
+                    app:backgroundTint="#375481"
+                    android:textColor="#fff"
+                    android:text="Select Hour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            
             <ImageView
                 android:id="@+id/imageNote"
                 android:layout_width="match_parent"
@@ -114,7 +185,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/inputTaskName" />
+                app:layout_constraintTop_toBottomOf="@+id/LLHora" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

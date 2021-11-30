@@ -3,6 +3,8 @@ package com.phipemc.notesapp.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -19,10 +21,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +35,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.work.Data;
+import androidx.work.WorkManager;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.phipemc.notesapp.R;
@@ -41,10 +47,21 @@ import com.phipemc.notesapp.entities.Task;
 
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
 public class CreateTaskActivity extends AppCompatActivity {
+    Button selefecha, selehora;
+    TextView tvfecha,tvhora;
+    Button guardar,eliminar;
+
+    Calendar actual = Calendar.getInstance();
+    Calendar calendar = Calendar.getInstance();
+
+    private int minuos,hora,dia,mes,anio;
+
     private EditText taskName;
     private TextView datetime;
     private Button alarmBtn;
@@ -66,6 +83,53 @@ public class CreateTaskActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_create);
+        selefecha = findViewById(R.id.btn_selefecha);
+        selehora = findViewById(R.id.btn_selehora);
+        tvfecha = findViewById(R.id.tv_fecha);
+        tvhora = findViewById(R.id.tv_hora);
+
+        //Seleccionar la fecha y hora
+        selefecha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                anio = actual.get(Calendar.YEAR);
+                mes = actual.get(Calendar.MONTH);
+                dia = actual.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(view.getContext(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int y, int m, int d) {
+                        calendar.set(Calendar.DAY_OF_MONTH, d);
+                        calendar.set(Calendar.MONTH, m);
+                        calendar.set(Calendar.YEAR, y);
+
+                        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                        String strDate = format.format(calendar.getTime());
+                        tvfecha.setText(strDate);
+                    }
+                },anio, mes, dia);
+                datePickerDialog.show();
+            }
+        });
+
+        selehora.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hora = actual.get(Calendar.HOUR_OF_DAY);
+                minuos = actual.get(Calendar.MINUTE);
+
+                TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int h, int m) {
+                        calendar.set(Calendar.HOUR_OF_DAY,h);
+                        calendar.set(Calendar.MINUTE,m);
+
+                        tvhora.setText(String.format("%02d:%02d",h,m));
+                    }
+                },hora,minuos,false);
+                timePickerDialog.show();
+            }
+        });
 
         ///Btono retornar
         ImageView imgBack = findViewById(R.id.image_back_task);
@@ -162,6 +226,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         if(taskHecha != null){
             miTarea.setId(taskHecha.getId());
         }
+        guardarAlarma(miTarea.getTitle());
 
         @SuppressLint("StaticFieldLeak")
         class guardarTarea extends AsyncTask<Void, Void, Void> {
@@ -180,6 +245,29 @@ public class CreateTaskActivity extends AppCompatActivity {
             }
         }
         new  guardarTarea().execute();
+    }
+
+    private void guardarAlarma(String tag1){
+        String tag = tag1;
+        Long AlertTime = calendar.getTimeInMillis() - System.currentTimeMillis();
+        int random = (int)(Math.random() * 50 + 1);
+
+        Data data = guardarData("Notificacion",tag, random);
+        Workmanagernoti.Guardar(AlertTime,data,tag1);
+
+        Toast.makeText(CreateTaskActivity.this, "Recordatorio Guardado", Toast.LENGTH_SHORT).show();
+    }
+
+    private void Eliminar(String tag){
+        WorkManager.getInstance(this).cancelAllWorkByTag(tag);
+        Toast.makeText(CreateTaskActivity.this, "Recordatorio Eliminado", Toast.LENGTH_SHORT).show();
+    }
+
+    private Data guardarData(String titulo, String detalle, int id){
+        return new Data.Builder()
+                .putString("titulo",titulo)
+                .putString("detalle",detalle)
+                .putInt("id",id).build();
     }
 
     private void initExtra(){
@@ -263,7 +351,7 @@ public class CreateTaskActivity extends AppCompatActivity {
                             finish();
                         }
                     }
-
+                    Eliminar(taskName.getText().toString());
                     new DeleteTask().execute();
                 }
             });
