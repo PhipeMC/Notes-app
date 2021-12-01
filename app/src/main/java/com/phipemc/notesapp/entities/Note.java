@@ -31,6 +31,9 @@ public class Note implements Serializable {
     @ColumnInfo(name = "img_path")
     private String imgpath;
 
+    @ColumnInfo(name = "video_path")
+    private String vidpath;
+
     @ColumnInfo(name = "web_link")
     private String web_link;
 
@@ -101,6 +104,14 @@ public class Note implements Serializable {
         this.imgpath = imgpath;
     }
 
+    public String getVidpath() {
+        return vidpath;
+    }
+
+    public void setVidpath(String vidpath) {
+        this.vidpath = vidpath;
+    }
+
     public String getWeb_link() {
         return web_link;
     }
@@ -109,7 +120,6 @@ public class Note implements Serializable {
         this.web_link = web_link;
     }
 
-    @NonNull
     @Override
     public String toString() {
         return "Note{" +
@@ -120,7 +130,9 @@ public class Note implements Serializable {
                 ", note_text='" + note_text + '\'' +
                 ", priority='" + priority + '\'' +
                 ", imgpath='" + imgpath + '\'' +
+                ", vidpath='" + vidpath + '\'' +
                 ", web_link='" + web_link + '\'' +
+                ", color='" + color + '\'' +
                 '}';
     }
 }

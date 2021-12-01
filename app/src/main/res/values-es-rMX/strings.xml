@@ -35,4 +35,5 @@
     <string name="add_video">Agregar video</string>
     <string name="task_notification_title">Recordatorio</string>
     <string name="add_capture">Agregar imagen (Tomar foto)</string>
+    <string name="add_video_take_video">Agregar video (Tomar video)</string>
 </resources>

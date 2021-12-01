@@ -20,6 +20,9 @@ public class Task implements Serializable {
     @ColumnInfo(name = "img_path")
     private String imgpath;
 
+    @ColumnInfo(name = "video_path")
+    private String vidpath;
+
     @ColumnInfo(name = "color")
     private String color;
 
@@ -55,6 +58,14 @@ public class Task implements Serializable {
         this.imgpath = imgpath;
     }
 
+    public String getVidpath() {
+        return vidpath;
+    }
+
+    public void setVidpath(String vidpath) {
+        this.vidpath = vidpath;
+    }
+
     public String getColor() {
         return color;
     }
@@ -70,6 +81,7 @@ public class Task implements Serializable {
                 ", title='" + title + '\'' +
                 ", date='" + date + '\'' +
                 ", imgpath='" + imgpath + '\'' +
+                ", vidpath='" + vidpath + '\'' +
                 ", color='" + color + '\'' +
                 '}';
     }

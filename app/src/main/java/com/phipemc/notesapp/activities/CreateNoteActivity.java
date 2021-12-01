@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -23,6 +24,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Layout;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.ContentInfo;
 import android.view.LayoutInflater;
@@ -33,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.phipemc.notesapp.R;
@@ -52,15 +55,18 @@ public class CreateNoteActivity extends AppCompatActivity {
     private TextView textFecha;
     private View viewSubIndica;
     private ImageView imageNote;
+    private VideoView videoNote;
     private TextView textWebURL;
     private LinearLayout layoutWebURL;
 
     private String selectedColor;
     private String selectedImagePath;
+    private String selectedVideoPath;
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
     private static final int CAMERA_REQUEST_CODE = 1001;
+    private static final int REQUEST_VIDEO_CAPTURE = 1;
 
     private AlertDialog dialogDeleteNote;
 
@@ -87,6 +93,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         textFecha = findViewById(R.id.textDateTime);
         viewSubIndica = findViewById(R.id.viewSubtitleIndicator);
         imageNote = findViewById(R.id.imageNote);
+        videoNote = findViewById(R.id.videoNote);
         textWebURL = findViewById(R.id.textWebURL);
         layoutWebURL = findViewById(R.id.layoutWebURL);
         //Darle formato a una fecha
@@ -105,6 +112,7 @@ public class CreateNoteActivity extends AppCompatActivity {
 
         selectedColor = "#efa639";
         selectedImagePath = "";
+        selectedVideoPath = "";
 
         if (getIntent().getBooleanExtra("isViewOrUpdate", false)) {
             alReadyAvailableNote = (Note) getIntent().getSerializableExtra("note");
@@ -129,7 +137,17 @@ public class CreateNoteActivity extends AppCompatActivity {
             }
         });
 
-        //extra
+        findViewById(R.id.videoRemove).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //videoNote.setBackground(R.drawable.ic_launcher_background);
+                videoNote.setVisibility(View.GONE);
+                findViewById(R.id.videoRemove).setVisibility(View.GONE);
+                selectedVideoPath = "";
+            }
+        });
+
+        /*//extra
         if (getIntent().getBooleanExtra("isFromQuickActions", false)) {
             String type = getIntent().getStringExtra("quickActionsType");
             if (type != null) {
@@ -142,10 +160,9 @@ public class CreateNoteActivity extends AppCompatActivity {
                     layoutWebURL.setVisibility(View.VISIBLE);
                 }
             }
-        }
+        }*/
 
         initExtra();
-        setViewSubIndicaColor();
     }
 
     //vista para poder ver o editar
@@ -162,9 +179,11 @@ public class CreateNoteActivity extends AppCompatActivity {
             selectedImagePath = alReadyAvailableNote.getImgpath();
         }
 
-        if (alReadyAvailableNote.getWeb_link() != null && !alReadyAvailableNote.getWeb_link().trim().isEmpty()) {
-            textWebURL.setText(alReadyAvailableNote.getWeb_link());
-            layoutWebURL.setVisibility(View.VISIBLE);
+        if (alReadyAvailableNote.getVidpath() != null && !alReadyAvailableNote.getVidpath().trim().isEmpty()) {
+            videoNote.setVideoPath(alReadyAvailableNote.getVidpath());
+            videoNote.setVisibility(View.VISIBLE);
+            findViewById(R.id.videoRemove).setVisibility(View.VISIBLE);
+            selectedVideoPath = alReadyAvailableNote.getVidpath();
         }
     }
 
@@ -184,6 +203,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         miNota.setDate(textFecha.getText().toString());
         miNota.setColor(selectedColor);
         miNota.setImgpath(selectedImagePath);
+        miNota.setVidpath(selectedVideoPath);
 
         if (layoutWebURL.getVisibility() == View.VISIBLE) {
             miNota.setWeb_link(textWebURL.getText().toString());
@@ -241,19 +261,23 @@ public class CreateNoteActivity extends AppCompatActivity {
             }
         });
 
-        layoutExtra.findViewById(R.id.layoutAddUrl).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                showAddURLDialog();
-            }
-        });
-
         layoutExtra.findViewById(R.id.layoutAddCapture).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, CAMERA_REQUEST_CODE);
+            }
+        });
+
+        layoutExtra.findViewById(R.id.layoutAddVideoCapture).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, REQUEST_VIDEO_CAPTURE);
+                }
+
             }
         });
 
@@ -316,11 +340,6 @@ public class CreateNoteActivity extends AppCompatActivity {
         dialogDeleteNote.show();
     }
 
-    private void setViewSubIndicaColor() {
-        GradientDrawable gradientDrawable = (GradientDrawable) viewSubIndica.getBackground();
-        gradientDrawable.setColor(Color.parseColor(selectedColor));
-    }
-
     private void selectImage() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         if (intent.resolveActivity(getPackageManager()) != null) {
@@ -376,9 +395,25 @@ public class CreateNoteActivity extends AppCompatActivity {
                     File finalFile = new File(getRealPathFromURI(tempUri));
 
                     selectedImagePath = getPathFromUri(tempUri);
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+            }
+        }
+
+        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+            Uri videoUri = data.getData();
+            if (videoUri != null) {
+                try {
+                    selectedVideoPath = getPathFromUri(videoUri);
+                    videoNote.setVideoURI(videoUri);
+                    videoNote.setVisibility(View.VISIBLE);
+                    findViewById(R.id.videoRemove).setVisibility(View.VISIBLE);
+                    videoNote.start();
+                } catch (Exception ex) {
+                    Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
             }
         }
     }
