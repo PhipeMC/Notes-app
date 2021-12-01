@@ -7,7 +7,7 @@
     <string name="note_subtitle">Subtítulo de nota</string>
     <string name="type_here">Ingresa el texto aquí</string>
     <string name="vario">Vario</string>
-    <string name="extra">Extra</string>
+    <string name="extra">Multimedia</string>
     <string name="add_image">Agregar imagen</string>
     <string name="add_uri">Agregar URL</string>
     <string name="enter_URL">Ingresa una URL</string>
@@ -33,4 +33,6 @@
     <string name="notas">Notas</string>
     <string name="tareas">Tareas</string>
     <string name="add_video">Agregar video</string>
+    <string name="task_notification_title">Recordatorio</string>
+    <string name="add_capture">Agregar imagen (Tomar foto)</string>
 </resources>

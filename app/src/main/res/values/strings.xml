@@ -6,7 +6,7 @@
     <string name="note_subtitle">Note Subtitle</string>
     <string name="type_here">Type text here</string>
     <string name="vario">Vario</string>
-    <string name="extra">Extra</string>
+    <string name="extra">Media</string>
     <string name="add_image">Add Image</string>
     <string name="add_uri">Add Uri</string>
     <string name="enter_URL">Type a URLa</string>
@@ -34,4 +34,5 @@
     <string name="tareas">Tasks</string>
     <string name="add_video">Add video</string>
     <string name="task_notification_title">Reminder</string>
+    <string name="add_capture">Add Image (Take picture)</string>
 </resources>
