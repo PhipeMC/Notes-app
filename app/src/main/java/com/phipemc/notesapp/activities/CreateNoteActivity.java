@@ -67,6 +67,7 @@ public class CreateNoteActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
     private static final int CAMERA_REQUEST_CODE = 1001;
     private static final int REQUEST_VIDEO_CAPTURE = 1;
+    private static final int REQUEST_CODE_SELECT_VIDEO = 3;
 
     private AlertDialog dialogDeleteNote;
 
@@ -147,21 +148,6 @@ public class CreateNoteActivity extends AppCompatActivity {
             }
         });
 
-        /*//extra
-        if (getIntent().getBooleanExtra("isFromQuickActions", false)) {
-            String type = getIntent().getStringExtra("quickActionsType");
-            if (type != null) {
-                if (type.equals("image")) {
-                    selectedImagePath = getIntent().getStringExtra("imagePath");
-                    imageNote.setImageBitmap(BitmapFactory.decodeFile(selectedImagePath));
-                    imageNote.setVisibility(View.VISIBLE);
-                } else if (type.equals("URL")) {
-                    textWebURL.setText(getIntent().getStringExtra("URL"));
-                    layoutWebURL.setVisibility(View.VISIBLE);
-                }
-            }
-        }*/
-
         initExtra();
     }
 
@@ -218,7 +204,6 @@ public class CreateNoteActivity extends AppCompatActivity {
         class guardarNota extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
-                //ojo
                 databaseNotes.getDatabase(getApplicationContext()).dao().insertNote(miNota);
                 return null;
             }
@@ -237,6 +222,7 @@ public class CreateNoteActivity extends AppCompatActivity {
     private void initExtra() {
         final LinearLayout layoutExtra = findViewById(R.id.layoutExtra);
         final BottomSheetBehavior<LinearLayout> bottomSheetBehavior = BottomSheetBehavior.from(layoutExtra);
+
         layoutExtra.findViewById(R.id.textExtra).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -270,6 +256,20 @@ public class CreateNoteActivity extends AppCompatActivity {
             }
         });
 
+        layoutExtra.findViewById(R.id.layoutAddVideo).setOnClickListener((v) -> {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            if (ContextCompat.checkSelfPermission(
+                    getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                        CreateNoteActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_CODE_STORAGE_PERMISSION
+                );
+            } else {
+                selectVideo();
+            }
+        });
+
         layoutExtra.findViewById(R.id.layoutAddVideoCapture).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -291,6 +291,13 @@ public class CreateNoteActivity extends AppCompatActivity {
                     showDeleteDialog();
                 }
             });
+        }
+    }
+
+    private void selectVideo() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
         }
     }
 
@@ -402,21 +409,7 @@ public class CreateNoteActivity extends AppCompatActivity {
             }
         }
 
-        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
-            /*Uri videoUri = data.getData();
-            if (videoUri != null) {
-                //try {
-                    selectedVideoPath = getPathFromUri(videoUri);
-                    videoNote.setVideoURI(videoUri);
-                    videoNote.setVisibility(View.VISIBLE);
-                    findViewById(R.id.videoRemove).setVisibility(View.VISIBLE);
-                    videoNote.start();
-                /*} catch (Exception ex) {
-                    Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }*/
-
-            //}
-
+        if (requestCode == REQUEST_CODE_SELECT_VIDEO && resultCode == RESULT_OK) {
             if(data != null){
                 Uri capturedVideoUri = data.getData();
                 if(capturedVideoUri != null){
@@ -433,23 +426,24 @@ public class CreateNoteActivity extends AppCompatActivity {
                 }
             }
 
-            /*if (data != null) {
-                try {
-                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                    imageNote.setImageBitmap(bitmap);
-                    imageNote.setVisibility(View.VISIBLE);
-                    findViewById(R.id.imageRemove).setVisibility(View.VISIBLE);
+        }
 
-                    Uri tempUri = getImageUri(getApplicationContext(), bitmap);
-
-                    // CALL THIS METHOD TO GET THE ACTUAL PATH
-                    File finalFile = new File(getRealPathFromURI(tempUri));
-
-                    selectedImagePath = getPathFromUri(tempUri);
-                } catch (Exception ex) {
-                    Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+            if(data != null){
+                Uri capturedVideoUri = data.getData();
+                if(capturedVideoUri != null){
+                    try {
+                        videoNote.setVideoURI(capturedVideoUri);
+                        videoNote.setVisibility(View.VISIBLE);
+                        findViewById(R.id.videoRemove).setVisibility(View.VISIBLE);
+                        selectedVideoPath = getPathFromUri(capturedVideoUri);
+                        videoNote.start();
+                        videoNote.resolveAdjustedSize(80,80);
+                    }catch (Exception ex) {
+                        Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }*/
+            }
 
         }
     }

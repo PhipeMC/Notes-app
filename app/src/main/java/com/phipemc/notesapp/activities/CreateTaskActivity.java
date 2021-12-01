@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -57,29 +58,32 @@ import java.util.UUID;
 
 public class CreateTaskActivity extends AppCompatActivity {
     Button selefecha, selehora;
-    TextView tvfecha,tvhora;
-    Button guardar,eliminar;
+    TextView tvfecha, tvhora;
+    Button guardar, eliminar;
 
     Calendar actual = Calendar.getInstance();
     Calendar calendar = Calendar.getInstance();
 
-    private int minuos,hora,dia,mes,anio;
+    private int minuos, hora, dia, mes, anio;
 
     private EditText taskName;
     private TextView datetime;
     private Button alarmBtn;
     private ImageView imageNote;
+    private VideoView videoNote;
     private AlertDialog dialogDeleteNote;
     private View viewSubIndica;
 
-    private String selectedColor;
     private Task taskHecha;
+    private String selectedColor;
     private String selectedImagePath;
+    private String selectedVideoPath;
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
     private static final int CAMERA_REQUEST_CODE = 1001;
-
+    private static final int REQUEST_VIDEO_CAPTURE = 1;
+    private static final int REQUEST_CODE_SELECT_VIDEO = 3;
 
     //private ActivityMainBinding
 
@@ -111,7 +115,7 @@ public class CreateTaskActivity extends AppCompatActivity {
                         String strDate = format.format(calendar.getTime());
                         tvfecha.setText(strDate);
                     }
-                },anio, mes, dia);
+                }, anio, mes, dia);
                 datePickerDialog.show();
             }
         });
@@ -125,12 +129,12 @@ public class CreateTaskActivity extends AppCompatActivity {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int h, int m) {
-                        calendar.set(Calendar.HOUR_OF_DAY,h);
-                        calendar.set(Calendar.MINUTE,m);
+                        calendar.set(Calendar.HOUR_OF_DAY, h);
+                        calendar.set(Calendar.MINUTE, m);
 
-                        tvhora.setText(String.format("%02d:%02d",h,m));
+                        tvhora.setText(String.format("%02d:%02d", h, m));
                     }
-                },hora,minuos,false);
+                }, hora, minuos, false);
                 timePickerDialog.show();
             }
         });
@@ -157,12 +161,13 @@ public class CreateTaskActivity extends AppCompatActivity {
         taskName = findViewById(R.id.inputTaskName);
         datetime = findViewById(R.id.textDateTimeTask);
         imageNote = findViewById(R.id.imageNote);
+        videoNote = findViewById(R.id.videoNote);
 
         datetime.setText(
                 new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault()).format(new Date())
         );
 
-        if(getIntent().getBooleanExtra("isViewOrUpdate", false)){
+        if (getIntent().getBooleanExtra("isViewOrUpdate", false)) {
             taskHecha = (Task) getIntent().getSerializableExtra("task");
             setViewOrUpdate();
         }
@@ -177,22 +182,18 @@ public class CreateTaskActivity extends AppCompatActivity {
             }
         });
 
-        //extra
-        if(getIntent().getBooleanExtra("isFromQuickActions", false)){
-            String type = getIntent().getStringExtra("quickActionsType");
-            if(type != null){
-                if(type.equals("image")){
-                    selectedImagePath = getIntent().getStringExtra("imagePath");
-                    imageNote.setImageBitmap(BitmapFactory.decodeFile(selectedImagePath));
-                    imageNote.setVisibility(View.VISIBLE);
-                }else if(type.equals("URL")){
-                    //textWebURL.setText(getIntent().getStringExtra("URL"));
-                    //layoutWebURL.setVisibility(View.VISIBLE);
-                }
+        findViewById(R.id.videoRemove).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //videoNote.setBackground(R.drawable.ic_launcher_background);
+                videoNote.setVisibility(View.GONE);
+                findViewById(R.id.videoRemove).setVisibility(View.GONE);
+                selectedVideoPath = "";
             }
-        }
+        });
         selectedColor = "#375481";
         selectedImagePath = "";
+        selectedVideoPath = "";
 
         initExtra();
 
@@ -203,16 +204,24 @@ public class CreateTaskActivity extends AppCompatActivity {
         taskName.setText(taskHecha.getTitle());
         datetime.setText(taskHecha.getDate());
 
-        if(taskHecha.getImgpath() != null && !taskHecha.getImgpath().trim().isEmpty()){
+        if (taskHecha.getImgpath() != null && !taskHecha.getImgpath().trim().isEmpty()) {
             imageNote.setImageBitmap(BitmapFactory.decodeFile(taskHecha.getImgpath()));
             imageNote.setVisibility(View.VISIBLE);
             findViewById(R.id.imageRemove).setVisibility(View.VISIBLE);
             selectedImagePath = taskHecha.getImgpath();
         }
+
+        if (taskHecha.getVidpath() != null && !taskHecha.getVidpath().trim().isEmpty()) {
+            videoNote.setVideoPath(taskHecha.getVidpath());
+            videoNote.setVisibility(View.VISIBLE);
+            videoNote.start();
+            findViewById(R.id.videoRemove).setVisibility(View.VISIBLE);
+            selectedVideoPath = taskHecha.getVidpath();
+        }
     }
 
-    private void guardar(){
-        if(taskName.getText().toString().trim().isEmpty()){
+    private void guardar() {
+        if (taskName.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, R.string.note_title_empty, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -222,12 +231,13 @@ public class CreateTaskActivity extends AppCompatActivity {
         miTarea.setDate(datetime.getText().toString());
         miTarea.setColor(selectedColor);
         miTarea.setImgpath(selectedImagePath);
+        miTarea.setVidpath(selectedVideoPath);
 
         //if(layoutWebURL.getVisibility() == View.VISIBLE){
-          //  miNota.setWeb_link(textWebURL.getText().toString());
+        //  miNota.setWeb_link(textWebURL.getText().toString());
         //}
 
-        if(taskHecha != null){
+        if (taskHecha != null) {
             miTarea.setId(taskHecha.getId());
         }
         guardarAlarma(miTarea.getTitle());
@@ -235,7 +245,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         @SuppressLint("StaticFieldLeak")
         class guardarTarea extends AsyncTask<Void, Void, Void> {
             @Override
-            protected Void doInBackground(Void...voids){
+            protected Void doInBackground(Void... voids) {
                 databaseTasks.getDatabase(getApplicationContext()).dao().insertNote(miTarea);
                 return null;
             }
@@ -243,46 +253,47 @@ public class CreateTaskActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void unused) {
                 super.onPostExecute(unused);
-                Intent intent =  new Intent();
+                Intent intent = new Intent();
                 setResult(RESULT_OK, intent);
                 finish();
             }
         }
-        new  guardarTarea().execute();
+        new guardarTarea().execute();
     }
 
-    private void guardarAlarma(String tag1){
+    private void guardarAlarma(String tag1) {
         String tag = tag1;
         Long AlertTime = calendar.getTimeInMillis() - System.currentTimeMillis();
-        int random = (int)(Math.random() * 50 + 1);
+        int random = (int) (Math.random() * 50 + 1);
 
-        Data data = guardarData("Notificacion",tag, random);
-        Workmanagernoti.Guardar(AlertTime,data,tag1);
+        Data data = guardarData("Notificacion", tag, random);
+        Workmanagernoti.Guardar(AlertTime, data, tag1);
 
         Toast.makeText(CreateTaskActivity.this, "Recordatorio Guardado", Toast.LENGTH_SHORT).show();
     }
 
-    private void Eliminar(String tag){
+    private void Eliminar(String tag) {
         WorkManager.getInstance(this).cancelAllWorkByTag(tag);
         Toast.makeText(CreateTaskActivity.this, "Recordatorio Eliminado", Toast.LENGTH_SHORT).show();
     }
 
-    private Data guardarData(String titulo, String detalle, int id){
+    private Data guardarData(String titulo, String detalle, int id) {
         return new Data.Builder()
-                .putString("titulo",titulo)
-                .putString("detalle",detalle)
-                .putInt("id",id).build();
+                .putString("titulo", titulo)
+                .putString("detalle", detalle)
+                .putInt("id", id).build();
     }
 
-    private void initExtra(){
+    private void initExtra() {
         final LinearLayout layoutExtra = findViewById(R.id.layoutExtra);
         final BottomSheetBehavior<LinearLayout> bottomSheetBehavior = BottomSheetBehavior.from(layoutExtra);
+
         layoutExtra.findViewById(R.id.textExtra).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED){
+                if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                }else{
+                } else {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
             }
@@ -291,24 +302,15 @@ public class CreateTaskActivity extends AppCompatActivity {
         //imagen
         layoutExtra.findViewById(R.id.layoutAddImage).setOnClickListener((v) -> {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            if(ContextCompat.checkSelfPermission(
+            if (ContextCompat.checkSelfPermission(
                     getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE
-            )!= PackageManager.PERMISSION_GRANTED){
+            ) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(
-                        CreateTaskActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
+                        CreateTaskActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         REQUEST_CODE_STORAGE_PERMISSION
                 );
-            }else {
+            } else {
                 selectImage();
-            }
-        });
-
-        //dialogos
-        layoutExtra.findViewById(R.id.layoutAddUrl).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
             }
         });
 
@@ -320,7 +322,33 @@ public class CreateTaskActivity extends AppCompatActivity {
             }
         });
 
-        if(taskHecha != null){
+        layoutExtra.findViewById(R.id.layoutAddVideo).setOnClickListener((v) -> {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            if (ContextCompat.checkSelfPermission(
+                    getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                        CreateTaskActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_CODE_STORAGE_PERMISSION
+                );
+            } else {
+                selectVideo();
+            }
+        });
+
+        layoutExtra.findViewById(R.id.layoutAddVideoCapture).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, REQUEST_VIDEO_CAPTURE);
+                }
+
+            }
+        });
+
+        if (taskHecha != null) {
             layoutExtra.findViewById(R.id.layoutDelete).setVisibility(View.VISIBLE);
             layoutExtra.findViewById(R.id.layoutDelete).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -332,21 +360,21 @@ public class CreateTaskActivity extends AppCompatActivity {
         }
     }
 
-    private void showDeleteDialog(){
-        if(dialogDeleteNote == null){
+    private void showDeleteDialog() {
+        if (dialogDeleteNote == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(CreateTaskActivity.this);
             View v = LayoutInflater.from(this).inflate(
                     R.layout.layout_delete_note, (ViewGroup) findViewById(R.id.layoutDeleteNoteContainer)
             );
             builder.setView(v);
             dialogDeleteNote = builder.create();
-            if(dialogDeleteNote.getWindow() != null){
+            if (dialogDeleteNote.getWindow() != null) {
                 dialogDeleteNote.getWindow().setBackgroundDrawable(new ColorDrawable(0));
             }
             v.findViewById(R.id.textDeleteNote).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    class DeleteTask extends AsyncTask<Void, Void, Void>{
+                    class DeleteTask extends AsyncTask<Void, Void, Void> {
 
                         @Override
                         protected Void doInBackground(Void... voids) {
@@ -379,20 +407,27 @@ public class CreateTaskActivity extends AppCompatActivity {
         dialogDeleteNote.show();
     }
 
-    private void selectImage(){
+    private void selectImage() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        if(intent.resolveActivity(getPackageManager()) != null){
+        if (intent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
+        }
+    }
+
+    private void selectVideo() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == REQUEST_CODE_STORAGE_PERMISSION && grantResults.length > 0){
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == REQUEST_CODE_STORAGE_PERMISSION && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 selectImage();
-            }else{
+            } else {
                 Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
             }
         }
@@ -401,11 +436,11 @@ public class CreateTaskActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK){
-            if(data != null){
+        if (requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK) {
+            if (data != null) {
                 Uri selectedImageUri = data.getData();
-                if(selectedImageUri != null){
-                    try{
+                if (selectedImageUri != null) {
+                    try {
                         InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
                         Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                         imageNote.setImageBitmap(bitmap);
@@ -413,7 +448,7 @@ public class CreateTaskActivity extends AppCompatActivity {
                         findViewById(R.id.imageRemove).setVisibility(View.VISIBLE);
 
                         selectedImagePath = getPathFromUri(selectedImageUri);
-                    }catch (Exception exception){
+                    } catch (Exception exception) {
                         Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -434,19 +469,57 @@ public class CreateTaskActivity extends AppCompatActivity {
                     File finalFile = new File(getRealPathFromURI(tempUri));
 
                     selectedImagePath = getPathFromUri(tempUri);
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
+
+        if (requestCode == REQUEST_CODE_SELECT_VIDEO && resultCode == RESULT_OK) {
+            if (data != null) {
+                Uri capturedVideoUri = data.getData();
+                if (capturedVideoUri != null) {
+                    try {
+                        videoNote.setVideoURI(capturedVideoUri);
+                        videoNote.setVisibility(View.VISIBLE);
+                        findViewById(R.id.videoRemove).setVisibility(View.VISIBLE);
+                        selectedVideoPath = getPathFromUri(capturedVideoUri);
+                        videoNote.start();
+                        videoNote.resolveAdjustedSize(80, 80);
+                    } catch (Exception ex) {
+                        Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+        }
+
+        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+            if (data != null) {
+                Uri capturedVideoUri = data.getData();
+                if (capturedVideoUri != null) {
+                    try {
+                        videoNote.setVideoURI(capturedVideoUri);
+                        videoNote.setVisibility(View.VISIBLE);
+                        findViewById(R.id.videoRemove).setVisibility(View.VISIBLE);
+                        selectedVideoPath = getPathFromUri(capturedVideoUri);
+                        videoNote.start();
+                        videoNote.resolveAdjustedSize(80, 80);
+                    } catch (Exception ex) {
+                        Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+        }
     }
 
-    private String getPathFromUri(Uri contentUri){
+    private String getPathFromUri(Uri contentUri) {
         String filePath;
         Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
-        if(cursor == null){
+        if (cursor == null) {
             filePath = contentUri.getPath();
-        }else{
+        } else {
             cursor.moveToFirst();
             int index = cursor.getColumnIndex("_data");
             filePath = cursor.getString(index);
