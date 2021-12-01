@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -45,6 +46,8 @@ import com.phipemc.notesapp.database.databaseTasks;
 import com.phipemc.notesapp.entities.Note;
 import com.phipemc.notesapp.entities.Task;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -75,6 +78,7 @@ public class CreateTaskActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
+    private static final int CAMERA_REQUEST_CODE = 1001;
 
 
     //private ActivityMainBinding
@@ -304,7 +308,15 @@ public class CreateTaskActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                showAddURLDialog();
+
+            }
+        });
+
+        layoutExtra.findViewById(R.id.layoutAddCapture).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, CAMERA_REQUEST_CODE);
             }
         });
 
@@ -407,6 +419,26 @@ public class CreateTaskActivity extends AppCompatActivity {
                 }
             }
         }
+
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data != null) {
+                try {
+                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                    imageNote.setImageBitmap(bitmap);
+                    imageNote.setVisibility(View.VISIBLE);
+                    findViewById(R.id.imageRemove).setVisibility(View.VISIBLE);
+
+                    Uri tempUri = getImageUri(getApplicationContext(), bitmap);
+
+                    // CALL THIS METHOD TO GET THE ACTUAL PATH
+                    File finalFile = new File(getRealPathFromURI(tempUri));
+
+                    selectedImagePath = getPathFromUri(tempUri);
+                }catch (Exception ex){
+                    Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 
     private String getPathFromUri(Uri contentUri){
@@ -423,7 +455,17 @@ public class CreateTaskActivity extends AppCompatActivity {
         return filePath;
     }
 
-    private void showAddURLDialog(){
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
 
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
     }
 }
