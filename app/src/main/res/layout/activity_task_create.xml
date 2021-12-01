@@ -175,15 +175,14 @@
 
             <VideoView
                 android:id="@+id/videoNote"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_width="237dp"
+                android:layout_height="575dp"
                 android:layout_marginTop="@dimen/_15sdp"
-                android:layout_marginEnd="@dimen/_12sdp"
-                android:adjustViewBounds="true"
                 android:contentDescription="@string/app_name"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/imageNote"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageNote" />
 
             <ImageView
                 android:id="@+id/videoRemove"

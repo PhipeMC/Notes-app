@@ -182,6 +182,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         if (alReadyAvailableNote.getVidpath() != null && !alReadyAvailableNote.getVidpath().trim().isEmpty()) {
             videoNote.setVideoPath(alReadyAvailableNote.getVidpath());
             videoNote.setVisibility(View.VISIBLE);
+            videoNote.start();
             findViewById(R.id.videoRemove).setVisibility(View.VISIBLE);
             selectedVideoPath = alReadyAvailableNote.getVidpath();
         }
@@ -274,9 +275,9 @@ public class CreateNoteActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
-                if (intent.resolveActivity(getPackageManager()) != null) {
+                //if (intent.resolveActivity(getPackageManager()) != null) {
                     startActivityForResult(intent, REQUEST_VIDEO_CAPTURE);
-                }
+                //}
 
             }
         });
@@ -402,19 +403,54 @@ public class CreateNoteActivity extends AppCompatActivity {
         }
 
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
-            Uri videoUri = data.getData();
+            /*Uri videoUri = data.getData();
             if (videoUri != null) {
-                try {
+                //try {
                     selectedVideoPath = getPathFromUri(videoUri);
                     videoNote.setVideoURI(videoUri);
                     videoNote.setVisibility(View.VISIBLE);
                     findViewById(R.id.videoRemove).setVisibility(View.VISIBLE);
                     videoNote.start();
+                /*} catch (Exception ex) {
+                    Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }*/
+
+            //}
+
+            if(data != null){
+                Uri capturedVideoUri = data.getData();
+                if(capturedVideoUri != null){
+                    try {
+                        videoNote.setVideoURI(capturedVideoUri);
+                        videoNote.setVisibility(View.VISIBLE);
+                        findViewById(R.id.videoRemove).setVisibility(View.VISIBLE);
+                        selectedVideoPath = getPathFromUri(capturedVideoUri);
+                        videoNote.start();
+                        videoNote.resolveAdjustedSize(80,80);
+                    }catch (Exception ex) {
+                        Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            /*if (data != null) {
+                try {
+                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                    imageNote.setImageBitmap(bitmap);
+                    imageNote.setVisibility(View.VISIBLE);
+                    findViewById(R.id.imageRemove).setVisibility(View.VISIBLE);
+
+                    Uri tempUri = getImageUri(getApplicationContext(), bitmap);
+
+                    // CALL THIS METHOD TO GET THE ACTUAL PATH
+                    File finalFile = new File(getRealPathFromURI(tempUri));
+
+                    selectedImagePath = getPathFromUri(tempUri);
                 } catch (Exception ex) {
                     Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+            }*/
 
-            }
         }
     }
 

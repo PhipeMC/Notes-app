@@ -8,6 +8,7 @@
     tools:context=".activities.CreateNoteActivity">
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_40sdp"
@@ -17,21 +18,21 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            android:layout_marginTop="@dimen/_15sdp">
+            android:layout_marginTop="@dimen/_15sdp"
+            android:animateLayoutChanges="true">
 
             <ImageView
                 android:id="@+id/image_back"
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
-                app:layout_goneMarginStart="@dimen/_6sdp"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_12sdp"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/ic_back_arrow"
-                app:tint="@color/colorIcons"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_goneMarginStart="@dimen/_6sdp"
+                app:tint="@color/colorIcons" />
 
             <ImageView
                 android:id="@+id/img_done_button"
@@ -42,10 +43,10 @@
                 android:contentDescription="@string/app_name"
                 android:padding="@dimen/_4sdp"
                 android:src="@drawable/ic_done"
-                app:tint="@color/colorIcons"
                 app:layout_constraintBottom_toBottomOf="@id/image_back"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/image_back" />
+                app:layout_constraintTop_toTopOf="@id/image_back"
+                app:tint="@color/colorIcons" />
 
             <EditText
                 android:id="@+id/inputNoteTitle"
@@ -117,7 +118,7 @@
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/app_name"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/inputNoteSubtitle"/>
+                app:layout_constraintTop_toBottomOf="@id/inputNoteSubtitle" />
 
             <ImageView
                 android:id="@+id/imageRemove"
@@ -129,22 +130,22 @@
                 android:contentDescription="@string/app_name"
                 android:padding="@dimen/_4sdp"
                 android:src="@drawable/ic_delete"
-                app:tint="@color/colorWhite"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@id/imageNote"
-                app:layout_constraintTop_toTopOf="@id/imageNote" />
+                app:layout_constraintTop_toTopOf="@id/imageNote"
+                app:tint="@color/colorWhite" />
 
             <VideoView
                 android:id="@+id/videoNote"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_width="237dp"
+                android:layout_height="575dp"
                 android:layout_marginTop="@dimen/_15sdp"
-                android:layout_marginEnd="@dimen/_12sdp"
-                android:adjustViewBounds="true"
                 android:contentDescription="@string/app_name"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/imageNote"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageNote" />
+
 
             <ImageView
                 android:id="@+id/videoRemove"
@@ -156,10 +157,12 @@
                 android:contentDescription="@string/app_name"
                 android:padding="@dimen/_4sdp"
                 android:src="@drawable/ic_delete"
-                app:tint="@color/colorWhite"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@id/videoNote"
-                app:layout_constraintTop_toTopOf="@id/videoNote" />
+                app:layout_constraintTop_toTopOf="@id/videoNote"
+                app:tint="@color/colorWhite" />
+
+
 
             <LinearLayout
                 android:id="@+id/layoutWebURL"
@@ -181,7 +184,7 @@
                     android:autoLink="web"
                     android:fontFamily="casual"
                     android:includeFontPadding="false"
-                    android:textSize="@dimen/_13ssp"/>
+                    android:textSize="@dimen/_13ssp" />
 
                 <ImageView
                     android:id="@+id/imageRemoveURL"
@@ -220,4 +223,6 @@
     </ScrollView>
 
     <include layout="@layout/layout_extra"/>
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

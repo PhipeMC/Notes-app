@@ -12,7 +12,7 @@
         <entry key="..\:/ITSUR/7mo/Movil/Proyecto-Final/Notes-app/app/src/main/res/layout/activity_create_note.xml" value="0.15625" />
         <entry key="..\:/ITSUR/7mo/Movil/Proyecto-Final/Notes-app/app/src/main/res/layout/activity_main.xml" value="0.15625" />
         <entry key="..\:/ITSUR/7mo/Movil/Proyecto-Final/Notes-app/app/src/main/res/layout/activity_task_create.xml" value="0.2" />
-        <entry key="..\:/Notes-app/app/src/main/res/layout/activity_create_note.xml" value="0.1" />
+        <entry key="..\:/Notes-app/app/src/main/res/layout/activity_create_note.xml" value="0.20416666666666666" />
         <entry key="..\:/Notes-app/app/src/main/res/layout/activity_task_create.xml" value="0.19610507246376813" />
         <entry key="..\:/Notes-app/app/src/main/res/layout/layout_extra.xml" value="0.19610507246376813" />
         <entry key="..\:/Respaldo proyectos/Android/Notes-app/app/src/main/res/drawable/background_delete.xml" value="0.5395833333333333" />
@@ -85,5 +85,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.1" />
+      </ProjectState>
+    </option>
   </component>
 </project>
